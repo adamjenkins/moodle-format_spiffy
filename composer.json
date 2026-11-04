@@ -14,7 +14,7 @@
         "source": "https://github.com/adamjenkins/moodle-format_spiffy"
     },
     "require": {
-        "moodle/moodle": "^5.3",
-        "moodle/composer-installer": "*"
+        "moodle/moodle": ">=5.3 <5.4",
+        "moodle/composer-installer": "^1.0"
     }
 }
