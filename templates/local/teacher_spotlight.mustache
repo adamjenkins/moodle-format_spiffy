@@ -1,0 +1,82 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/local/teacher_spotlight
+
+    The teacher spotlight at the top of the page: what needs the teacher's attention, and
+    "Preview as student". While the teacher previews as a student, only the way back. Context
+    from format_spiffy\local\teacher::export_page(). Also rendered by
+    format_spiffy_mark_questions_seen, so it must not use uniqid or a js block.
+
+    Example context (json):
+    {
+        "courseid": 2,
+        "isswitched": false,
+        "hasitems": true,
+        "items": [
+            {"cmid": 3, "name": "Hand in your plan", "focusurl": "#module-3", "kind": "grading",
+                "label": "3 to grade", "actionurl": "#", "actionlabel": "Grade", "hasaction": true},
+            {"cmid": 4, "name": "Say hello", "focusurl": "#module-4", "kind": "questions",
+                "label": "1 new question", "actionurl": null, "actionlabel": "", "hasaction": false}
+        ],
+        "hasmore": false,
+        "morelabel": "And 0 more",
+        "hassummary": true,
+        "summary": [{"kind": "grading", "label": "3 to grade"}],
+        "preview": {"url": "#", "rolename": "Student"}
+    }
+}}
+<div class="spiffy-teacher-spotlight{{#isswitched}} spiffy-teacher-spotlight--preview{{/isswitched}}" data-region="spiffy-teacher-spotlight">
+    {{#isswitched}}
+        {{> format_spiffy/teacher/preview_banner }}
+    {{/isswitched}}
+    {{^isswitched}}
+        <details class="spiffy-teacher-attention" open>
+            <summary class="spiffy-teacher-attention-summary">
+                <h2 class="spiffy-teacher-attention-title">{{#str}} teacherattention, format_spiffy {{/str}}</h2>
+                {{#hassummary}}
+                    <span class="spiffy-teacher-totals">
+                        {{#summary}}<span class="badge mds-badge spiffy-teacher-badge spiffy-teacher-badge--{{kind}}">{{label}}</span>{{/summary}}
+                    </span>
+                {{/hassummary}}
+            </summary>
+            <div class="spiffy-teacher-attention-body">
+                {{#hasitems}}
+                    <ul class="spiffy-teacher-items list-unstyled">
+                        {{#items}}
+                            <li class="spiffy-teacher-item spiffy-teacher-item--{{kind}}">
+                                {{> format_spiffy/teacher/attention_item }}
+                            </li>
+                        {{/items}}
+                    </ul>
+                    {{#hasmore}}<p class="spiffy-note">{{morelabel}}</p>{{/hasmore}}
+                {{/hasitems}}
+                {{^hasitems}}
+                    <p class="spiffy-note spiffy-teacher-allclear">{{#str}} teacherallclear, format_spiffy {{/str}}</p>
+                {{/hasitems}}
+                {{#preview}}
+                    <p class="spiffy-teacher-preview">
+                        <a href="{{url}}" class="btn mds-btn mds-btn--size-sm btn-outline-secondary">
+                            {{#pix}} t/preview, core {{/pix}}<span>{{#str}} teacherpreview, format_spiffy {{/str}}</span>
+                        </a>
+                        <span class="spiffy-note">{{#str}} teacherpreviewhelp, format_spiffy, {{rolename}} {{/str}}</span>
+                    </p>
+                {{/preview}}
+            </div>
+        </details>
+    {{/isswitched}}
+</div>

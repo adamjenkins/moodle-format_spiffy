@@ -1,0 +1,43 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/teacher/attention_item
+
+    The inside of one line of the teacher spotlight (the list item is in
+    format_spiffy/local/teacher_spotlight): what needs attention on one card. The name focuses the card
+    (format_spiffy/teacher sends format_spiffy:focuscard; the hash works without JavaScript); the
+    action, when there is one, opens the grading or approval page.
+
+    Example context (json):
+    {
+        "cmid": 3,
+        "name": "Hand in your plan",
+        "focusurl": "#module-3",
+        "kind": "grading",
+        "label": "3 to grade",
+        "actionurl": "#",
+        "actionlabel": "Grade",
+        "hasaction": true
+    }
+}}
+    <span class="badge mds-badge spiffy-teacher-badge spiffy-teacher-badge--{{kind}}">{{label}}</span>
+    <a href="{{focusurl}}" class="spiffy-teacher-item-name" data-spiffy-focus="{{cmid}}">{{name}}</a>
+    {{#hasaction}}
+        <a href="{{actionurl}}" class="btn mds-btn mds-btn--size-sm btn-outline-primary spiffy-teacher-item-action">
+            {{actionlabel}}<span class="visually-hidden">: {{name}}</span>
+        </a>
+    {{/hasaction}}

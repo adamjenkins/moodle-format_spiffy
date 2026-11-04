@@ -1,0 +1,93 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/local/spotlight_cards
+
+    The cards of a section or subsection island: step cards, text-and-media notes and subsection
+    islands, in page order. The empty side strip is filled by format_spiffy/spotlight with the
+    cards that are not on centre stage. Part of the section HTML: no uniqid helper or js block.
+
+    Every item sets spiffystep, spiffynote, spiffysub, spiffytracked, spiffyrequires and spiffyprereqs, so a card
+    inside a subsection never picks up the subsection's own values.
+
+    Step cards carry data-activity-cmid (and their info area data-region="activity-extras"), so plugins
+    that add to activities on the course page find them: local_waitwhat's "What do I need?" chips
+    and tool_activitydates' grade-lock notes.
+
+    Example context (json):
+    {
+        "id": 10,
+        "columns": 3,
+        "sectionname": "Get ready for IVEProject",
+        "spiffyitems": [
+            {
+                "id": 3,
+                "anchor": "module-3",
+                "module": "forum",
+                "cmformat": {
+                    "cmid": 3,
+                    "activityname": "Learn how to communicate here",
+                    "url": "#",
+                    "spiffystep": true,
+                    "spiffynote": false,
+                    "spiffysub": false,
+                    "spiffytracked": true,
+                    "spiffyrequires": "",
+                    "spiffyprereqs": "",
+                    "spiffyheadinglevel": 3,
+                    "spiffystate": "available",
+                    "spiffyaccent": "green",
+                    "spiffytitle": "Learn how to communicate here",
+                    "spiffybuttonlabel": "Practise in the forum",
+                    "spiffyavailable": true
+                }
+            },
+            {
+                "id": 4,
+                "anchor": "module-4",
+                "module": "label",
+                "cmformat": {
+                    "cmid": 4,
+                    "spiffystep": false,
+                    "spiffynote": true,
+                    "spiffysub": false,
+                    "spiffytracked": false,
+                    "spiffyrequires": "",
+                    "spiffyprereqs": "",
+                    "spiffyfull": true,
+                    "altcontent": "<h4>What happens next?</h4><p>The exchange opens when you finish.</p>"
+                }
+            }
+        ]
+    }
+}}
+<div class="spiffy-cards-wrap" id="spiffy-cards-{{id}}">
+    <ul class="spiffy-cards spiffy-cols-{{columns}}">
+        {{#spiffyitems}}
+            {{#cmformat}}
+            <li id="{{anchor}}"
+                class="spiffy-item modtype_{{module}}{{#spiffystep}} spiffy-card spiffy-accent-{{spiffyaccent}} spiffy-card--{{spiffystate}}{{/spiffystep}}{{#spiffynote}} spiffy-note-item{{/spiffynote}}{{#spiffysub}} spiffy-subsection-item{{/spiffysub}}{{#spiffyfull}} spiffy-item--full{{/spiffyfull}}{{#spiffylocked}} spiffy-card--locked{{/spiffylocked}}{{#spiffydimmed}} spiffy-item--dimmed{{/spiffydimmed}}"
+                data-id="{{id}}"{{#spiffystep}} data-spiffy-state="{{spiffystate}}" {{^spiffylocked}} data-activity-available="1"{{/spiffylocked}} data-activity-cmid="{{id}}"{{/spiffystep}}{{#spiffytracked}} data-spiffy-tracked="1"{{/spiffytracked}}{{#spiffyrequires}} data-spiffy-requires="{{spiffyrequires}}"{{/spiffyrequires}}{{#spiffyprereqs}} data-spiffy-prereqs="{{spiffyprereqs}}"{{/spiffyprereqs}}>
+                {{#spiffystep}}{{> format_spiffy/local/step }}{{/spiffystep}}
+                {{#spiffynote}}{{> format_spiffy/local/note }}{{/spiffynote}}
+                {{#spiffysub}}{{> format_spiffy/local/spotlight_island }}{{/spiffysub}}
+            </li>
+            {{/cmformat}}
+        {{/spiffyitems}}
+    </ul>
+    <ul class="spiffy-strip" data-region="spiffy-strip" aria-label="{{#str}} otheractivities, format_spiffy, {{sectionname}} {{/str}}" hidden></ul>
+</div>

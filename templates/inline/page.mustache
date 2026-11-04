@@ -1,0 +1,51 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/inline/page
+
+    A short page read inside its card. Text longer than a few lines is collapsed behind a "Read
+    more" expander (a native details element, so it works by keyboard without JavaScript).
+
+    Example context (json):
+    {
+        "cmid": 5,
+        "name": "What happens next",
+        "content": "<div class=\"no-overflow\"><p>Next week we meet in room 4.</p></div>",
+        "excerpt": "Next week we meet in room 4.",
+        "collapsible": true,
+        "canmark": true,
+        "markread": true,
+        "done": false
+    }
+}}
+<div class="spiffy-inline spiffy-page{{#done}} spiffy-done-view{{/done}}">
+    {{#collapsible}}
+        <details class="spiffy-readmore">
+            <summary class="spiffy-readmore-summary">
+                <span class="spiffy-readmore-excerpt">{{excerpt}}</span>
+                <span class="spiffy-readmore-more">{{#done}}{{#str}} readagain, format_spiffy {{/str}}{{/done}}{{^done}}{{#str}} readmore, format_spiffy {{/str}}{{/done}}<span class="visually-hidden">: {{{name}}}</span></span>
+                <span class="spiffy-readmore-less">{{#str}} showless, format_spiffy {{/str}}<span class="visually-hidden">: {{{name}}}</span></span>
+            </summary>
+            <div class="spiffy-readmore-content">{{{content}}}</div>
+            {{> format_spiffy/inline/page_markread }}
+        </details>
+    {{/collapsible}}
+    {{^collapsible}}
+        <div class="spiffy-readmore-content">{{{content}}}</div>
+        {{> format_spiffy/inline/page_markread }}
+    {{/collapsible}}
+</div>

@@ -1,0 +1,48 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/inline/forum_post
+
+    One forum post on a card: the author, the time and the message.
+
+    Example context (json):
+    {
+        "id": 12,
+        "author": "Sam Student",
+        "picture": "",
+        "time": "2/11/26, 10:15",
+        "isotime": "2026-11-02T10:15:00+00:00",
+        "subject": "Re: Introduce yourself",
+        "showsubject": false,
+        "message": "<p>Hello, I am Sam.</p>",
+        "private": false
+    }
+}}
+<article class="spiffy-forum-post" aria-labelledby="spiffy-forum-post-{{id}}-author">
+    <header class="spiffy-forum-meta">
+        {{{picture}}}
+        <span class="spiffy-forum-author" id="spiffy-forum-post-{{id}}-author">{{author}}</span>
+        <time class="spiffy-forum-time" datetime="{{isotime}}">{{time}}</time>
+        {{#private}}
+            <span class="badge mds-badge text-bg-secondary">{{#str}} forum_privatereply, format_spiffy {{/str}}</span>
+        {{/private}}
+    </header>
+    {{#showsubject}}
+        <p class="spiffy-forum-subject">{{{subject}}}</p>
+    {{/showsubject}}
+    <div class="spiffy-forum-message">{{{message}}}</div>
+</article>

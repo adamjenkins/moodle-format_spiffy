@@ -1,0 +1,93 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/inline/data
+
+    A simple Database on its card: the entry form, the user's latest entry (with "waiting for
+    approval" where needed) and classmates' latest entries to rate or comment on. Once the
+    activity is done the form folds away behind "Add another entry".
+
+    Example context (json):
+    {
+        "cmid": 11,
+        "done": true,
+        "canadd": true,
+        "needsapproval": false,
+        "remaining": "",
+        "maxlength": 10000,
+        "fields": [
+            {"id": 1, "name": "Title", "description": "", "hasdescription": false, "required": true,
+                "istext": true, "isnumber": false, "isurl": false, "istextarea": false, "ismenu": false,
+                "isradio": false, "ischeckbox": false, "isgroup": false, "options": []}
+        ],
+        "hasmine": true,
+        "mine": {"approved": true, "url": "https://example.com/mod/data/view.php?d=1&rid=4",
+            "fields": [{"name": "Title", "value": "My favourite book"}]},
+        "haspeers": true,
+        "peers": [{
+            "id": 5, "author": "Ana Peer", "picture": "", "time": "2/11/26, 10:00",
+            "isotime": "2026-11-02T10:00:00+00:00", "title": "", "body": "", "hasfields": true,
+            "fields": [{"name": "Title", "value": "Dune"}],
+            "url": "https://example.com/mod/data/view.php?d=1&rid=5", "rating": false, "comments": false
+        }]
+    }
+}}
+<div class="spiffy-inline spiffy-data{{#done}} spiffy-done-view{{/done}}">
+    {{#hasmine}}
+        {{#mine}}
+            <p class="spiffy-inline-heading">
+                <a href="{{url}}">{{#str}} data_yourentry, format_spiffy {{/str}}</a>
+                {{^approved}}
+                    <span class="badge mds-badge text-bg-warning">{{#str}} peer_waiting, format_spiffy {{/str}}</span>
+                {{/approved}}
+            </p>
+            <dl class="spiffy-entry-fields spiffy-own-entry">
+                {{#fields}}
+                    <dt>{{{name}}}</dt>
+                    <dd>{{{value}}}</dd>
+                {{/fields}}
+            </dl>
+        {{/mine}}
+    {{/hasmine}}
+    {{#canadd}}
+        {{#done}}
+            <details class="spiffy-inline-more">
+                <summary>{{#str}} data_addanother, format_spiffy {{/str}}</summary>
+                {{> format_spiffy/inline/data_form }}
+            </details>
+        {{/done}}
+        {{^done}}
+            {{#hasmine}}
+                <details class="spiffy-inline-more">
+                    <summary>{{#str}} data_addanother, format_spiffy {{/str}}</summary>
+                    {{> format_spiffy/inline/data_form }}
+                </details>
+            {{/hasmine}}
+            {{^hasmine}}
+                {{> format_spiffy/inline/data_form }}
+            {{/hasmine}}
+        {{/done}}
+    {{/canadd}}
+    {{#haspeers}}
+        <p class="spiffy-inline-heading">{{#str}} peer_fromclassmates, format_spiffy {{/str}}</p>
+        <ul class="list-unstyled spiffy-entry-list spiffy-peers">
+            {{#peers}}
+                <li>{{> format_spiffy/inline/glossary_peer }}</li>
+            {{/peers}}
+        </ul>
+    {{/haspeers}}
+</div>

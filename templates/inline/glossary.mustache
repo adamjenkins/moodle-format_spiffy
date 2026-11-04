@@ -1,0 +1,77 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/inline/glossary
+
+    A Glossary on its card: a quick "add a term" form, the user's own latest terms (with "waiting
+    for approval" where needed) and classmates' latest terms to rate or comment on. Once the
+    activity is done the form folds away behind "Add another term".
+
+    Example context (json):
+    {
+        "cmid": 9,
+        "done": false,
+        "canadd": true,
+        "needsapproval": false,
+        "maxconcept": 255,
+        "maxlength": 10000,
+        "hasmine": true,
+        "mine": [{"id": 30, "concept": "Osmosis", "definition": "<p>Water moving through a membrane.</p>", "approved": false}],
+        "haspeers": true,
+        "peers": [{
+            "id": 31, "author": "Ana Peer", "picture": "", "time": "2/11/26, 10:00",
+            "isotime": "2026-11-02T10:00:00+00:00", "title": "Photosynthesis",
+            "body": "<p>How plants turn light into sugar.</p>", "hasfields": false, "fields": [],
+            "url": "https://example.com/mod/glossary/showentry.php?eid=31", "rating": false, "comments": false
+        }]
+    }
+}}
+<div class="spiffy-inline spiffy-glossary{{#done}} spiffy-done-view{{/done}}">
+    {{#canadd}}
+        {{#done}}
+            <details class="spiffy-inline-more">
+                <summary>{{#str}} glossary_addanother, format_spiffy {{/str}}</summary>
+                {{> format_spiffy/inline/glossary_form }}
+            </details>
+        {{/done}}
+        {{^done}}
+            {{> format_spiffy/inline/glossary_form }}
+        {{/done}}
+    {{/canadd}}
+    {{#hasmine}}
+        <p class="spiffy-inline-heading">{{#str}} glossary_yourterms, format_spiffy {{/str}}</p>
+        <ul class="list-unstyled spiffy-entry-list spiffy-glossary-mine">
+            {{#mine}}
+                <li class="spiffy-own-entry">
+                    <span class="spiffy-peer-title">{{{concept}}}</span>
+                    {{^approved}}
+                        <span class="badge mds-badge text-bg-warning">{{#str}} peer_waiting, format_spiffy {{/str}}</span>
+                    {{/approved}}
+                    <div class="spiffy-peer-body">{{{definition}}}</div>
+                </li>
+            {{/mine}}
+        </ul>
+    {{/hasmine}}
+    {{#haspeers}}
+        <p class="spiffy-inline-heading">{{#str}} peer_fromclassmates, format_spiffy {{/str}}</p>
+        <ul class="list-unstyled spiffy-entry-list spiffy-peers">
+            {{#peers}}
+                <li>{{> format_spiffy/inline/glossary_peer }}</li>
+            {{/peers}}
+        </ul>
+    {{/haspeers}}
+</div>

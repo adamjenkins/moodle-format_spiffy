@@ -1,0 +1,2134 @@
+/* Spiffy course format: card layout outside editing mode.
+ * Colours come from Moodle Design System tokens (--mds-*) with Bootstrap fallbacks, so the
+ * layout follows Boost's light and dark colour modes. */
+
+.format-spiffy {
+    --spiffy-gap: var(--mds-spacing-lg, 1.5rem);
+    --spiffy-radius: var(--mds-border-radius-xl, 1rem);
+    --spiffy-surface: var(--mds-bg-surface-default, var(--bs-body-bg));
+    --spiffy-text: var(--mds-text-default, var(--bs-body-color));
+    --spiffy-muted: var(--mds-text-subtle, var(--bs-secondary-color));
+    --spiffy-border: var(--mds-border-subtle, var(--bs-border-color));
+    --spiffy-primary: var(--mds-bg-interactive-primary-default, var(--bs-primary));
+    /* Text on a primary fill. Not --mds-text-inverse: that turns near black in dark mode while the
+     * fill stays Moodle blue (3.0:1); white is 5.3:1 on it in both modes. */
+    --spiffy-on-primary: #fff;
+    --spiffy-success: var(--mds-text-feedback-success, var(--bs-success-text-emphasis));
+    --spiffy-success-bg: var(--mds-bg-feedback-success-light, var(--bs-success-bg-subtle));
+    --spiffy-island-bg: color-mix(in srgb, var(--spiffy-primary) 4%, var(--spiffy-surface));
+    --spiffy-island-border: color-mix(in srgb, var(--spiffy-primary) 14%, var(--spiffy-border));
+    --spiffy-sub-bg: color-mix(in srgb, var(--spiffy-primary) 8%, var(--spiffy-surface));
+    color: var(--spiffy-text);
+    padding-bottom: var(--mds-spacing-xl, 2rem);
+}
+
+/* Section island: label, title, summary, progress, then the activities, on a soft tint. */
+.format-spiffy .spiffy-section {
+    container: spiffy-island / inline-size; /* stylelint-disable-line csstree/validator -- container queries. */
+    position: relative;
+    margin: var(--mds-spacing-lg, 1.5rem) 0 var(--mds-spacing-xl, 2rem);
+    padding: var(--mds-spacing-xl, 2rem) var(--mds-spacing-lg, 1.5rem);
+    border: 1px solid var(--spiffy-island-border);
+    border-radius: calc(var(--spiffy-radius) * 1.5);
+    background-color: var(--spiffy-island-bg);
+    scroll-margin-top: 5rem;
+}
+
+.format-spiffy .spiffy-section-head {
+    max-width: 44rem;
+    margin: 0 auto var(--mds-spacing-xl, 2.5rem);
+}
+
+.format-spiffy .spiffy-eyebrow {
+    margin: 0 0 var(--mds-spacing-xs, 0.5rem);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.8125rem;
+    font-weight: var(--mds-font-weight-bold, 700);
+    color: var(--mds-text-link-primary-default, var(--bs-link-color));
+}
+
+.format-spiffy .spiffy-section-title {
+    margin: 0 0 var(--mds-spacing-md, 1rem);
+    text-align: center;
+    font-size: clamp(1.75rem, 1.2rem + 2.4vw, 3rem); /* stylelint-disable-line csstree/validator -- CSS Values 4. */
+    font-weight: var(--mds-font-weight-bold, 700);
+    line-height: 1.15;
+    color: var(--mds-text-emphasis, var(--bs-emphasis-color));
+}
+
+.format-spiffy .spiffy-section-title .icon {
+    font-size: 0.6em;
+    vertical-align: middle;
+}
+
+.format-spiffy .spiffy-section-head > .spiffy-badges {
+    justify-content: center;
+    margin-bottom: var(--mds-spacing-xs, 0.5rem);
+}
+
+.format-spiffy .spiffy-section-summary {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: var(--spiffy-muted);
+    text-align: center;
+}
+
+.format-spiffy .spiffy-section-summary > :last-child {
+    margin-bottom: 0;
+}
+
+.format-spiffy .spiffy-section-availability {
+    margin-top: var(--mds-spacing-sm, 0.75rem);
+    font-size: 0.875rem;
+    color: var(--spiffy-muted);
+}
+
+.format-spiffy .spiffy-section--locked .spiffy-section-title,
+.format-spiffy .spiffy-section--locked .spiffy-section-summary {
+    color: var(--spiffy-muted);
+}
+
+.format-spiffy .spiffy-section--hidden .spiffy-section-head {
+    padding: var(--mds-spacing-md, 1rem);
+    border: 1px dashed var(--spiffy-border);
+    border-radius: var(--spiffy-radius);
+}
+
+/* Card grid: columns on demand, full-width cards span the row. */
+.format-spiffy .spiffy-cards-wrap {
+    position: relative;
+    container-type: inline-size; /* stylelint-disable-line csstree/validator -- container queries, as core reportbuilder. */
+}
+
+.format-spiffy .spiffy-cards {
+    --spiffy-columns: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spiffy-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* The cards of a row share all its width, however few they are: no empty columns. */
+.format-spiffy .spiffy-cards > * {
+    flex: 1 1 calc((100% - (var(--spiffy-columns) - 1) * var(--spiffy-gap)) / var(--spiffy-columns));
+    min-width: 0;
+}
+
+/* Column count follows the width of the course content area, not the viewport. */
+@container (min-width: 34rem) { /* stylelint-disable-line csstree/validator */
+    .format-spiffy .spiffy-cols-2,
+    .format-spiffy .spiffy-cols-3,
+    .format-spiffy .spiffy-cols-4 {
+        --spiffy-columns: 2;
+    }
+}
+
+@container (min-width: 46rem) { /* stylelint-disable-line csstree/validator */
+    .format-spiffy .spiffy-cols-3,
+    .format-spiffy .spiffy-cols-4 {
+        --spiffy-columns: 3;
+    }
+}
+
+@container (min-width: 64rem) { /* stylelint-disable-line csstree/validator */
+    .format-spiffy .spiffy-cols-4 {
+        --spiffy-columns: 4;
+    }
+}
+
+.format-spiffy .spiffy-cards > .spiffy-item--full {
+    flex-basis: 100%;
+}
+
+/* Accents. */
+.format-spiffy .spiffy-accent-green {
+    --spiffy-accent: var(--mds-color-green-500, #6a9f2a);
+}
+.format-spiffy .spiffy-accent-amber {
+    --spiffy-accent: var(--mds-color-yellow-500, #d9a326);
+}
+.format-spiffy .spiffy-accent-coral {
+    --spiffy-accent: var(--mds-color-red-400, #e06c5a);
+}
+.format-spiffy .spiffy-accent-blue {
+    --spiffy-accent: var(--mds-color-blue-500, #0f6cbf);
+}
+.format-spiffy .spiffy-accent-purple {
+    --spiffy-accent: var(--mds-color-purple-500, #7a4fc4);
+}
+.format-spiffy .spiffy-accent-teal {
+    --spiffy-accent: var(--mds-color-teal-500, #1f9e8f);
+}
+.format-spiffy .spiffy-accent-grey {
+    --spiffy-accent: var(--mds-color-gray-500, #6a737b);
+}
+
+/* Card. */
+.format-spiffy .spiffy-card {
+    padding: var(--mds-spacing-lg, 1.5rem);
+    border: 1px solid var(--spiffy-border);
+    border-top: 4px solid var(--spiffy-accent);
+    border-radius: var(--spiffy-radius);
+    background-color: color-mix(in srgb, var(--spiffy-accent) 7%, var(--spiffy-surface));
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -16px rgba(0, 0, 0, 0.18);
+    scroll-margin-top: 5rem;
+}
+
+.format-spiffy .spiffy-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mds-spacing-sm, 0.75rem);
+    height: 100%;
+}
+
+.format-spiffy .spiffy-card-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mds-spacing-sm, 0.75rem);
+}
+
+/* The activity type's icon, just after the number or tick. Core's partial pins it to the top with a margin. */
+.format-spiffy .spiffy-card-head .activity-icon {
+    flex-shrink: 0;
+    align-self: center !important; /* stylelint-disable-line declaration-no-important */
+    margin-inline-end: 0 !important; /* stylelint-disable-line declaration-no-important */
+}
+
+.format-spiffy .spiffy-step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 2px solid var(--mds-text-emphasis, var(--bs-emphasis-color));
+    border-radius: 50%;
+    font-weight: var(--mds-font-weight-bold, 700);
+    font-size: 1.0625rem;
+}
+
+.format-spiffy .spiffy-step .icon {
+    margin: 0;
+}
+
+.format-spiffy .spiffy-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mds-spacing-xxs, 0.25rem);
+    justify-content: flex-end;
+}
+
+.format-spiffy .spiffy-card-title {
+    margin: var(--mds-spacing-xs, 0.5rem) 0 0;
+    font-size: 1.25rem;
+    font-weight: var(--mds-font-weight-bold, 700);
+    line-height: 1.3;
+    color: var(--mds-text-emphasis, var(--bs-emphasis-color));
+}
+
+.format-spiffy .spiffy-card-summary {
+    color: var(--spiffy-muted);
+    line-height: 1.6;
+}
+
+.format-spiffy .spiffy-card-summary > :last-child,
+.format-spiffy .spiffy-card-summary .no-overflow > :last-child {
+    margin-bottom: 0;
+}
+
+/* Activities. */
+.format-spiffy .spiffy-card-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--mds-spacing-xs, 0.5rem);
+    margin-top: auto;
+    padding-top: var(--mds-spacing-xs, 0.5rem);
+}
+
+.format-spiffy .spiffy-card-actions:empty {
+    display: none;
+}
+
+.format-spiffy .spiffy-card-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--mds-spacing-xs, 0.5rem);
+}
+
+.format-spiffy .spiffy-card-actions:empty + .spiffy-card-meta {
+    margin-top: auto;
+}
+
+.format-spiffy .spiffy-lock .icon {
+    margin: 0;
+    color: var(--spiffy-muted);
+}
+
+.format-spiffy .spiffy-card-actions .spiffy-cm-button.mds-btn.btn {
+    max-width: 100%;
+    font-weight: var(--mds-font-weight-semibold, 600);
+    line-height: 1.35;
+    text-align: start;
+    white-space: normal;
+}
+
+.format-spiffy .spiffy-cm-button.disabled {
+    opacity: 1;
+    cursor: not-allowed;
+}
+
+/* Hidden or restricted for students but visible to this user: marked without lowering contrast. */
+.format-spiffy .spiffy-card-actions .spiffy-cm-button.mds-btn.btn.spiffy-dimmed {
+    border: 1px dashed var(--mds-border-default, var(--bs-border-color));
+    background-color: var(--mds-bg-surface-subtle, var(--bs-tertiary-bg));
+    color: var(--mds-text-subtle, var(--bs-secondary-color));
+}
+
+.format-spiffy .spiffy-note,
+.format-spiffy .spiffy-cm-afterlink,
+.format-spiffy .spiffy-cm-availability {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--spiffy-muted);
+}
+
+.format-spiffy .spiffy-cm-completion {
+    padding: 0;
+    list-style: none;
+}
+
+.format-spiffy .spiffy-cm-completion .is-complete {
+    color: var(--mds-text-feedback-success, var(--bs-success-text-emphasis));
+}
+
+.format-spiffy .spiffy-cm-completion .is-failed {
+    color: var(--mds-text-feedback-danger, var(--bs-danger-text-emphasis));
+}
+
+.format-spiffy .spiffy-cm-completion .icon {
+    margin-right: var(--mds-spacing-xxs, 0.25rem);
+    font-size: 0.875em;
+}
+
+.format-spiffy .spiffy-unlock {
+    margin-top: var(--mds-spacing-xs, 0.5rem);
+}
+
+.format-spiffy .spiffy-card-availability .availabilityinfo,
+.format-spiffy .spiffy-cm-availability .availabilityinfo {
+    padding: 0;
+}
+
+/* States: restricted (locked) and hidden from students. */
+.format-spiffy .spiffy-card--locked {
+    --spiffy-accent: var(--mds-color-gray-400, #a5acb3);
+    background-color: var(--mds-bg-surface-subtle, var(--bs-tertiary-bg));
+}
+
+.format-spiffy .spiffy-card--locked .spiffy-step,
+.format-spiffy .spiffy-card--locked .spiffy-card-title {
+    color: var(--spiffy-muted);
+    border-color: var(--spiffy-muted);
+}
+
+.format-spiffy .spiffy-card.spiffy-item--dimmed {
+    border-style: dashed;
+    border-top-style: solid;
+}
+
+.format-spiffy .spiffy-section.current .spiffy-section-title {
+    text-decoration: underline;
+    text-decoration-color: var(--mds-bg-interactive-primary-default, var(--bs-primary));
+    text-underline-offset: 0.2em;
+}
+
+/* Availability hints: a locked step points back at the step that unlocks it. */
+.format-spiffy .spiffy-hint-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.format-spiffy .spiffy-hint-arrow {
+    fill: none;
+    stroke: var(--mds-bg-interactive-primary-default, var(--bs-primary));
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 8 8;
+}
+
+.format-spiffy .spiffy-hint-layer marker path {
+    fill: var(--mds-bg-interactive-primary-default, var(--bs-primary));
+}
+
+.format-spiffy .spiffy-card {
+    position: relative;
+}
+
+.format-spiffy .spiffy-card.spiffy-hint-source {
+    box-shadow: 0 0 0 3px var(--mds-bg-interactive-primary-default, var(--bs-primary)), 0 8px 24px -16px rgba(0, 0, 0, 0.18);
+}
+
+.format-spiffy .spiffy-card.spiffy-hint-source::after {
+    content: attr(data-spiffy-hint-label);
+    position: absolute;
+    top: -0.85rem;
+    right: var(--mds-spacing-md, 1rem);
+    padding: var(--mds-spacing-xxs, 0.25rem) var(--mds-spacing-xs, 0.5rem);
+    border-radius: var(--mds-border-radius-pill, 50rem);
+    background-color: var(--spiffy-primary);
+    color: var(--spiffy-on-primary);
+    font-size: 0.8125rem;
+    font-weight: var(--mds-font-weight-semibold, 600);
+    white-space: nowrap;
+}
+
+/* A locked step in the middle of the chain: on the way, not the place to start. */
+.format-spiffy .spiffy-card.spiffy-hint-chain {
+    outline: 2px dashed var(--mds-bg-interactive-primary-default, var(--bs-primary));
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .format-spiffy .spiffy-hint-arrow {
+        animation: spiffy-hint-flow 0.8s linear infinite;
+    }
+
+    .format-spiffy .spiffy-card.spiffy-hint-source {
+        animation: spiffy-hint-pulse 1.2s ease-in-out infinite;
+    }
+}
+
+@keyframes spiffy-hint-flow {
+    to {
+        stroke-dashoffset: -16;
+    }
+}
+
+@keyframes spiffy-hint-pulse {
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+/* Text and media notes. */
+.format-spiffy .spiffy-note-item {
+    display: flex;
+    justify-content: center;
+}
+
+.format-spiffy .spiffy-note-box {
+    width: 100%;
+    max-width: 54rem;
+    padding: var(--mds-spacing-md, 1rem) var(--mds-spacing-lg, 1.5rem);
+    border: 1px solid var(--spiffy-border);
+    border-radius: var(--spiffy-radius);
+    background-color: var(--mds-bg-surface-subtle, var(--bs-tertiary-bg));
+    text-align: center;
+    color: var(--spiffy-muted);
+}
+
+.format-spiffy .spiffy-note-box :is(h2, h3, h4, h5, h6) {
+    margin: 0 0 var(--mds-spacing-xxs, 0.25rem);
+    font-size: 1.125rem;
+    font-weight: var(--mds-font-weight-bold, 700);
+    color: var(--mds-text-emphasis, var(--bs-emphasis-color));
+}
+
+.format-spiffy .spiffy-note-content > :last-child,
+.format-spiffy .spiffy-note-content .no-overflow > :last-child {
+    margin-bottom: 0;
+}
+
+.format-spiffy .spiffy-note-badges {
+    justify-content: center;
+}
+
+.format-spiffy .spiffy-note-badges:empty {
+    display: none;
+}
+
+.format-spiffy .spiffy-note-box.spiffy-dimmed {
+    border-style: dashed;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .format-spiffy .spiffy-cm-button {
+        transition: transform 0.15s ease;
+    }
+    .format-spiffy a.spiffy-cm-button:hover {
+        transform: translateY(-1px);
+    }
+}
+
+/* Buttons on a primary fill keep readable text in light and dark mode. The Bootstrap button
+ * properties carry the hover, focus and active states too. */
+.format-spiffy .mds-btn.btn.btn-primary,
+.format-spiffy .mds-btn.btn.btn-outline-primary:hover,
+.format-spiffy .mds-btn.btn.btn-outline-primary:active {
+    --bs-btn-color: var(--spiffy-on-primary);
+    --bs-btn-hover-color: var(--spiffy-on-primary);
+    --bs-btn-active-color: var(--spiffy-on-primary);
+    --bs-btn-disabled-color: var(--spiffy-on-primary);
+    color: var(--spiffy-on-primary);
+}
+
+/* Top of the page: "What's next" and the "Show me everything" toggle. */
+.format-spiffy .spiffy-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--mds-spacing-md, 1rem);
+    margin: var(--mds-spacing-md, 1rem) 0;
+}
+
+.format-spiffy .spiffy-viewmode {
+    margin-inline-start: auto;
+}
+
+.format-spiffy .spiffy-viewmode-toggle .icon {
+    margin-inline-end: var(--mds-spacing-xs, 0.5rem);
+}
+
+.format-spiffy .spiffy-viewmode-toggle[aria-pressed="true"] {
+    border-color: var(--mds-border-interactive-primary-default, var(--bs-primary));
+    color: var(--mds-text-link-primary-default, var(--bs-link-color));
+}
+
+.format-spiffy .spiffy-whatsnext {
+    flex: 1 1 22rem;
+    min-width: 0;
+    padding: var(--mds-spacing-md, 1rem) var(--mds-spacing-lg, 1.5rem);
+    border: 1px solid var(--spiffy-island-border);
+    border-radius: var(--spiffy-radius);
+    background-color: var(--spiffy-surface);
+}
+
+.format-spiffy .spiffy-whatsnext-title {
+    margin: 0 0 var(--mds-spacing-xs, 0.5rem);
+    font-size: 1rem;
+    font-weight: var(--mds-font-weight-bold, 700);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--mds-text-link-primary-default, var(--bs-link-color));
+}
+
+.format-spiffy .spiffy-whatsnext-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mds-spacing-xs, 0.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.format-spiffy .spiffy-whatsnext-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--mds-spacing-xxs, 0.25rem) var(--mds-spacing-xs, 0.5rem);
+}
+
+.format-spiffy .spiffy-whatsnext-link {
+    font-weight: var(--mds-font-weight-semibold, 600);
+}
+
+.format-spiffy .spiffy-whatsnext-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mds-spacing-xs, 0.5rem);
+    width: 100%;
+    font-size: 0.875rem;
+    color: var(--spiffy-muted);
+}
+
+.format-spiffy .spiffy-whatsnext-section::before {
+    content: "\00b7";
+    margin-inline-end: var(--mds-spacing-xs, 0.5rem);
+}
+
+.format-spiffy .spiffy-whatsnext-date:empty + .spiffy-whatsnext-section::before,
+.format-spiffy .spiffy-whatsnext-meta > .spiffy-whatsnext-section:first-child::before {
+    content: none;
+}
+
+.format-spiffy .spiffy-whatsnext-more,
+.format-spiffy .spiffy-whatsnext-empty {
+    margin: var(--mds-spacing-xs, 0.5rem) 0 0;
+    font-size: 0.875rem;
+    color: var(--spiffy-muted);
+}
+
+/* Status badge colours (grade, due soon, overdue), readable in both modes. */
+.format-spiffy .spiffy-status-badge--success {
+    background-color: var(--spiffy-success-bg);
+    color: var(--spiffy-success);
+}
+
+.format-spiffy .spiffy-status-badge--warning {
+    background-color: var(--mds-bg-feedback-warning-light, var(--bs-warning-bg-subtle));
+    color: var(--mds-text-feedback-warning, var(--bs-warning-text-emphasis));
+}
+
+.format-spiffy .spiffy-status-badge--danger {
+    background-color: var(--mds-bg-feedback-danger-light, var(--bs-danger-bg-subtle));
+    color: var(--mds-text-feedback-danger, var(--bs-danger-text-emphasis));
+}
+
+.format-spiffy .spiffy-status-badge--info {
+    background-color: var(--mds-bg-feedback-info-light, var(--bs-info-bg-subtle));
+    color: var(--mds-text-feedback-info, var(--bs-info-text-emphasis));
+}
+
+/* Progress ring and the island bar (ring, "1 of 3 done", show or hide the activities). */
+.format-spiffy .spiffy-island-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--mds-spacing-sm, 0.75rem);
+    margin-top: var(--mds-spacing-md, 1rem);
+}
+
+.format-spiffy .spiffy-progress {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mds-spacing-xs, 0.5rem);
+    font-size: 0.875rem;
+    font-weight: var(--mds-font-weight-semibold, 600);
+    color: var(--spiffy-muted);
+}
+
+.format-spiffy .spiffy-ring {
+    flex-shrink: 0;
+    width: 2.25rem;
+    height: 2.25rem;
+}
+
+.format-spiffy .spiffy-ring circle {
+    fill: none;
+    stroke-width: 4;
+}
+
+.format-spiffy .spiffy-ring-track {
+    stroke: var(--mds-border-subtle, var(--bs-border-color));
+}
+
+.format-spiffy .spiffy-ring-value {
+    stroke: var(--spiffy-primary);
+    stroke-linecap: round;
+}
+
+.format-spiffy .spiffy-progress--complete {
+    color: var(--spiffy-success);
+}
+
+.format-spiffy .spiffy-progress--complete .spiffy-ring-value {
+    stroke: var(--spiffy-success);
+}
+
+.format-spiffy .spiffy-ring-tick {
+    fill: none;
+    stroke: var(--spiffy-success);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* The ring at 0 % would still draw a dot with round caps. */
+.format-spiffy .spiffy-ring-value[stroke-dasharray^="0 "] {
+    stroke: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .format-spiffy .spiffy-ring-value {
+        transition: stroke-dasharray 0.6s ease;
+    }
+}
+
+/* Island toggle: only for islands that can shrink (spotlight mode, while a card is on stage). */
+/* With .btn in the selectors, so core's button styles (.mds-btn.btn, 5.3) cannot show it again. */
+.format-spiffy .spiffy-island-bar .spiffy-island-toggle.btn {
+    display: none;
+}
+
+.spiffy-view-spotlight.spiffy-has-stage .spiffy-island:not(.spiffy-island--stage) > .spiffy-island-head .spiffy-island-toggle.btn {
+    display: inline-flex;
+}
+
+.format-spiffy .spiffy-island-toggle[aria-expanded="true"] .spiffy-toggle-show,
+.format-spiffy .spiffy-island-toggle[aria-expanded="false"] .spiffy-toggle-hide {
+    display: none;
+}
+
+.format-spiffy .spiffy-island-name {
+    display: none;
+    margin: 0;
+    font-weight: var(--mds-font-weight-bold, 700);
+    color: var(--mds-text-emphasis, var(--bs-emphasis-color));
+}
+
+/* Subsections: smaller islands nested in their section. */
+.format-spiffy .spiffy-subsection-item {
+    min-width: 0;
+}
+
+.format-spiffy .spiffy-island--sub {
+    container: spiffy-island / inline-size; /* stylelint-disable-line csstree/validator -- container queries. */
+    position: relative;
+    padding: var(--mds-spacing-md, 1rem) var(--mds-spacing-lg, 1.5rem) var(--mds-spacing-lg, 1.5rem);
+    border: 1px solid var(--spiffy-island-border);
+    border-radius: var(--spiffy-radius);
+    background-color: var(--spiffy-sub-bg);
+}
+
+.format-spiffy .spiffy-island--sub > .spiffy-island-head {
+    margin-bottom: var(--mds-spacing-md, 1rem);
+}
+
+.format-spiffy .spiffy-island-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: var(--mds-font-weight-bold, 700);
+    color: var(--mds-text-emphasis, var(--bs-emphasis-color));
+}
+
+.format-spiffy .spiffy-island--sub .spiffy-island-bar {
+    justify-content: flex-start;
+    margin-top: var(--mds-spacing-xs, 0.5rem);
+}
+
+.format-spiffy .spiffy-island--locked .spiffy-island-title {
+    color: var(--spiffy-muted);
+}
+
+/* Compact islands: the other sections in spotlight mode, with their ring, until expanded. */
+.format-spiffy.spiffy-view-spotlight .spiffy-island--compact {
+    margin: var(--mds-spacing-sm, 0.75rem) 0;
+    padding: var(--mds-spacing-sm, 0.75rem) var(--mds-spacing-lg, 1.5rem);
+    cursor: pointer;
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-island--compact > .spiffy-cards-wrap {
+    display: none;
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-island--compact > .spiffy-island-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-xxs, 0.25rem) var(--mds-spacing-md, 1rem);
+    max-width: none;
+    margin: 0;
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-island--compact .spiffy-eyebrow {
+    flex-basis: 100%;
+    margin: 0;
+    text-align: start;
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-island--compact .spiffy-section-title,
+.format-spiffy.spiffy-view-spotlight .spiffy-island--compact .spiffy-island-title {
+    margin: 0;
+    font-size: 1.125rem;
+    text-align: start;
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-island--compact .spiffy-island-name {
+    display: block;
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-island--compact .spiffy-section-summary {
+    display: none;
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-island--compact .spiffy-section-availability {
+    flex-basis: 100%;
+    margin: 0;
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-island--compact .spiffy-island-bar {
+    margin: 0 0 0 auto;
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-island--compact:hover {
+    border-color: var(--mds-border-interactive-primary-default, var(--bs-primary));
+}
+
+/* The island holding the stage stretches around the big card and its side strip. */
+.format-spiffy.spiffy-view-spotlight .spiffy-section.spiffy-island--stage {
+    padding: var(--mds-spacing-xl, 2rem);
+    border-color: color-mix(in srgb, var(--spiffy-primary) 30%, var(--spiffy-border));
+    box-shadow: 0 12px 40px -28px rgba(0, 0, 0, 0.35);
+}
+
+.format-spiffy .spiffy-wrap--stage > .spiffy-cards {
+    align-content: start;
+}
+
+.format-spiffy .spiffy-wrap--stage > .spiffy-cards > * {
+    flex-basis: min(100%, 20rem); /* stylelint-disable-line csstree/validator */
+}
+
+.format-spiffy .spiffy-wrap--stage > .spiffy-cards > .spiffy-item--full {
+    flex-basis: 100%;
+}
+
+/* Side strip: under the stage on narrow islands, a scrolling row of tiles; beside it on wide ones. */
+.format-spiffy .spiffy-strip {
+    display: flex;
+    gap: var(--mds-spacing-sm, 0.75rem);
+    margin: var(--spiffy-gap) 0 0;
+    padding: 0 0 var(--mds-spacing-xs, 0.5rem);
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+}
+
+.format-spiffy .spiffy-strip > .spiffy-item {
+    flex: 0 0 min(15rem, 80%); /* stylelint-disable-line csstree/validator */
+    scroll-snap-align: start;
+}
+
+.format-spiffy .spiffy-strip[hidden] {
+    display: none;
+}
+
+@container spiffy-island (min-width: 44rem) { /* stylelint-disable-line csstree/validator */
+    .format-spiffy .spiffy-wrap--stage {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(12rem, 16rem);
+        align-items: start;
+        gap: var(--spiffy-gap);
+    }
+
+    /* No side strip: the stage has the whole width. */
+    .format-spiffy .spiffy-wrap--stage:not(:has(> .spiffy-strip:not([hidden]))) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .format-spiffy .spiffy-wrap--stage > .spiffy-strip {
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        overflow: visible;
+    }
+
+    .format-spiffy .spiffy-wrap--stage > .spiffy-strip > .spiffy-item {
+        flex: none;
+    }
+}
+
+/* The cards on stage: large, centre stage. */
+.format-spiffy.spiffy-view-spotlight .spiffy-card.spiffy-is-stage {
+    padding: var(--mds-spacing-xl, 2rem);
+    border-top-width: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 24px 48px -28px rgba(0, 0, 0, 0.35);
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-card.spiffy-is-stage .spiffy-card-title {
+    font-size: 1.625rem;
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-card.spiffy-is-stage .spiffy-card-summary {
+    font-size: 1.0625rem;
+}
+
+/* Title link: the heading still looks like a heading. */
+.format-spiffy .spiffy-card-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-card-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
+/* Tiles: cards in the side strip, and done cards off stage. Title, badges and the core details
+ * (dates, completion, restrictions) stay; the rest shows when the tile is brought to the stage. */
+.format-spiffy.spiffy-view-spotlight .spiffy-card.spiffy-is-tile,
+.format-spiffy.spiffy-view-spotlight .spiffy-card.spiffy-card--done:not(.spiffy-is-stage) {
+    padding: var(--mds-spacing-sm, 0.75rem) var(--mds-spacing-md, 1rem);
+    border-top-width: 3px;
+    box-shadow: none;
+}
+
+/* A done card in a grid row keeps its own height instead of stretching to its neighbours'. */
+.format-spiffy.spiffy-view-spotlight .spiffy-card.spiffy-card--done:not(.spiffy-is-stage):not(.spiffy-is-tile) {
+    align-self: start;
+}
+
+.format-spiffy.spiffy-view-spotlight .spiffy-card:not(.spiffy-is-stage),
+.format-spiffy.spiffy-view-list .spiffy-card {
+    cursor: pointer;
+}
+
+.format-spiffy.spiffy-view-spotlight :is(.spiffy-is-tile, .spiffy-card--done:not(.spiffy-is-stage)) .spiffy-card-summary,
+.format-spiffy.spiffy-view-spotlight :is(.spiffy-is-tile, .spiffy-card--done:not(.spiffy-is-stage)) .spiffy-inline-region,
+.format-spiffy.spiffy-view-spotlight :is(.spiffy-is-tile, .spiffy-card--done:not(.spiffy-is-stage)) .spiffy-card-actions,
+.format-spiffy.spiffy-view-spotlight :is(.spiffy-is-tile, .spiffy-card--done:not(.spiffy-is-stage)) .spiffy-card-extras {
+    display: none;
+}
+
+.format-spiffy.spiffy-view-spotlight :is(.spiffy-is-tile, .spiffy-card--done:not(.spiffy-is-stage)) .spiffy-card-body {
+    gap: var(--mds-spacing-xs, 0.5rem);
+}
+
+.format-spiffy.spiffy-view-spotlight :is(.spiffy-is-tile, .spiffy-card--done:not(.spiffy-is-stage)) .spiffy-card-title {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.format-spiffy.spiffy-view-spotlight :is(.spiffy-is-tile, .spiffy-card--done:not(.spiffy-is-stage)) .spiffy-step {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.875rem;
+}
+
+.format-spiffy.spiffy-view-spotlight :is(.spiffy-is-tile, .spiffy-card--done:not(.spiffy-is-stage)) .spiffy-card-meta {
+    gap: var(--mds-spacing-xxs, 0.25rem);
+}
+
+.format-spiffy.spiffy-view-spotlight :is(.spiffy-is-tile, .spiffy-card--done:not(.spiffy-is-stage)) .spiffy-note,
+.format-spiffy.spiffy-view-spotlight :is(.spiffy-is-tile, .spiffy-card--done:not(.spiffy-is-stage)) .spiffy-cm-afterlink,
+.format-spiffy.spiffy-view-spotlight :is(.spiffy-is-tile, .spiffy-card--done:not(.spiffy-is-stage)) .spiffy-cm-availability {
+    font-size: 0.8125rem;
+}
+
+.format-spiffy .spiffy-strip .spiffy-note-box {
+    padding: var(--mds-spacing-sm, 0.75rem);
+    font-size: 0.875rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .format-spiffy.spiffy-view-spotlight .spiffy-card:not(.spiffy-is-stage) {
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .format-spiffy.spiffy-view-spotlight .spiffy-card:not(.spiffy-is-stage):hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Done: a calm look, with the tick in the circle. */
+.format-spiffy .spiffy-card.spiffy-card--done {
+    --spiffy-accent: var(--spiffy-success);
+    background-color: var(--spiffy-surface);
+}
+
+.format-spiffy .spiffy-step.spiffy-step--done {
+    border-color: var(--spiffy-success);
+    background-color: var(--spiffy-success-bg);
+    color: var(--spiffy-success);
+}
+
+.format-spiffy .spiffy-step--done .icon {
+    color: inherit;
+}
+
+/* "Open alongside" and "Close". */
+.format-spiffy .spiffy-pin {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.format-spiffy .spiffy-pin[data-spiffy-pinned="1"] .spiffy-pin-add,
+.format-spiffy .spiffy-pin:not([data-spiffy-pinned="1"]) .spiffy-pin-remove {
+    display: none;
+}
+
+.format-spiffy .spiffy-card-head .spiffy-badges {
+    margin-inline-start: auto;
+}
+
+/* A card that has just unlocked, and a card a link pointed at in the list. */
+.format-spiffy .spiffy-card.spiffy-is-next,
+.format-spiffy .spiffy-card.spiffy-is-highlighted {
+    box-shadow: 0 0 0 3px var(--mds-border-interactive-primary-default, var(--bs-primary)), 0 8px 24px -16px rgba(0, 0, 0, 0.18);
+}
+
+.format-spiffy .spiffy-card:focus-visible {
+    outline: 3px solid var(--mds-border-interactive-primary-default, var(--bs-primary));
+    outline-offset: 2px;
+}
+
+/* Celebration when a section becomes complete (the confetti is format_spiffy/confetti, on a canvas). */
+.format-spiffy .spiffy-section.spiffy-celebrate {
+    border-color: var(--spiffy-success);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--spiffy-success) 35%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .format-spiffy .spiffy-section.spiffy-celebrate .spiffy-progress--complete .spiffy-ring {
+        animation: spiffy-ring-pop 0.6s ease;
+    }
+}
+
+@keyframes spiffy-ring-pop {
+    50% {
+        transform: scale(1.25);
+    }
+}
+
+/* Phones: a little less padding around islands and cards. */
+@container spiffy-island (max-width: 30rem) { /* stylelint-disable-line csstree/validator */
+    .format-spiffy .spiffy-card,
+    .format-spiffy.spiffy-view-spotlight .spiffy-card.spiffy-is-stage {
+        padding: var(--mds-spacing-md, 1rem);
+    }
+}
+
+@media (max-width: 575.98px) {
+    .format-spiffy .spiffy-section,
+    .format-spiffy.spiffy-view-spotlight .spiffy-section.spiffy-island--stage {
+        padding: var(--mds-spacing-md, 1rem);
+    }
+}
+
+/* ---- feedback-quiz ---- */
+/* Inline Feedback and Quiz (format_spiffy/inline/feedback*, quiz*). */
+.spiffy-feedback-label,
+.spiffy-feedback-aftersubmit {
+    margin-bottom: var(--mds-spacing-sm, 0.5rem);
+    color: var(--mds-text-subtle, var(--bs-secondary-color));
+}
+.spiffy-feedback-question,
+.spiffy-quiz-question {
+    font-weight: 600;
+    margin-bottom: var(--mds-spacing-sm, 0.5rem);
+    color: var(--mds-text-default, var(--bs-body-color));
+}
+.spiffy-quiz-question p:last-child,
+.spiffy-feedback-question p:last-child {
+    margin-bottom: 0;
+}
+.spiffy-feedback-required {
+    color: var(--mds-text-danger, var(--bs-danger-text-emphasis));
+}
+.spiffy-feedback-number {
+    max-width: 12rem;
+}
+.spiffy-feedback-answer,
+.spiffy-feedback-done .spiffy-done-answer strong {
+    white-space: pre-line;
+}
+.spiffy-done-thanks {
+    font-weight: 600;
+    margin-bottom: var(--mds-spacing-xs, 0.25rem);
+}
+.spiffy-feedback-summary,
+.spiffy-quiz-rightanswer,
+.spiffy-quiz-pending {
+    color: var(--mds-text-subtle, var(--bs-secondary-color));
+    margin-bottom: var(--mds-spacing-sm, 0.5rem);
+}
+.spiffy-quiz-result {
+    margin-bottom: var(--mds-spacing-sm, 0.5rem);
+}
+.spiffy-quiz-grade {
+    font-weight: 600;
+}
+.spiffy-quiz-feedback {
+    border-inline-start: 3px solid var(--mds-border-subtle, var(--bs-border-color));
+    padding-inline-start: var(--mds-spacing-sm, 0.75rem);
+    margin-bottom: var(--mds-spacing-sm, 0.5rem);
+}
+.spiffy-quiz-feedback > div p:last-child {
+    margin-bottom: 0;
+}
+.spiffy-inline-again {
+    margin-top: var(--mds-spacing-sm, 0.5rem);
+}
+.spiffy-inline-again > summary {
+    display: inline-block;
+    list-style: none;
+    padding-inline: 0;
+}
+.spiffy-inline-again > summary::-webkit-details-marker {
+    display: none;
+}
+.spiffy-inline-again[open] > summary {
+    margin-bottom: var(--mds-spacing-sm, 0.5rem);
+}
+.spiffy-inline-again > summary:focus-visible {
+    outline: 2px solid var(--mds-focus-default, var(--bs-focus-ring-color, var(--bs-primary)));
+    outline-offset: 2px;
+}
+
+/* ---- forum-glossary-data ---- */
+/* Inline Forum, Glossary and Database cards, and peer reactions. */
+.spiffy-forum,
+.spiffy-glossary,
+.spiffy-data {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mds-spacing-sm, 0.75rem);
+}
+.spiffy-inline-heading {
+    margin: 0;
+    font-weight: var(--mds-font-weight-semibold, 600);
+    color: var(--mds-text-emphasis, var(--bs-emphasis-color));
+}
+.spiffy-forum-post,
+.spiffy-peer-entry,
+.spiffy-own-entry {
+    padding: var(--mds-spacing-xs, 0.5rem) var(--mds-spacing-sm, 0.75rem);
+    border: 1px solid var(--mds-border-subtle, var(--bs-border-color));
+    border-radius: var(--mds-border-radius-lg, 0.5rem);
+    background: var(--mds-bg-surface-subtle, var(--bs-tertiary-bg));
+    color: var(--mds-text-default, var(--bs-body-color));
+    overflow-wrap: anywhere;
+}
+.spiffy-forum-meta,
+.spiffy-peer-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-xs, 0.5rem);
+    margin-bottom: var(--mds-spacing-xxs, 0.25rem);
+}
+.spiffy-forum-meta .userpicture,
+.spiffy-peer-meta .userpicture {
+    width: 1.75rem;
+    height: 1.75rem;
+    margin: 0;
+}
+.spiffy-forum-author,
+.spiffy-peer-author,
+.spiffy-comment-author {
+    font-weight: var(--mds-font-weight-semibold, 600);
+}
+.spiffy-forum-time,
+.spiffy-peer-time,
+.spiffy-comment-time,
+.spiffy-forum-empty,
+.spiffy-forum-closed {
+    color: var(--mds-text-subtle, var(--bs-secondary-color));
+    font-size: 0.875rem;
+}
+.spiffy-forum-empty,
+.spiffy-forum-closed {
+    margin: 0;
+}
+.spiffy-forum-subject,
+.spiffy-peer-title {
+    margin: 0;
+    font-weight: var(--mds-font-weight-bold, 700);
+}
+.spiffy-forum-message > :last-child,
+.spiffy-peer-body > :last-child,
+.spiffy-comment-text > :last-child {
+    margin-bottom: 0;
+}
+.spiffy-forum-replies {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mds-spacing-xs, 0.5rem);
+    padding-left: var(--mds-spacing-md, 1rem);
+    border-left: 2px solid var(--mds-border-default, var(--bs-border-color));
+}
+.spiffy-forum-list,
+.spiffy-entry-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mds-spacing-xs, 0.5rem);
+    margin: 0;
+}
+.spiffy-forum-all,
+.spiffy-comments-all {
+    align-self: flex-start;
+    font-size: 0.875rem;
+    color: var(--mds-text-link-primary-default, var(--bs-link-color));
+}
+.spiffy-inline-more > summary {
+    cursor: pointer;
+    color: var(--mds-text-link-primary-default, var(--bs-link-color));
+    font-weight: var(--mds-font-weight-semibold, 600);
+}
+.spiffy-inline-more > summary:focus-visible {
+    outline: 2px solid var(--mds-bg-interactive-primary-default, var(--bs-primary));
+    outline-offset: 2px;
+    border-radius: var(--mds-border-radius-sm, 0.25rem);
+}
+.spiffy-inline-more[open] > summary {
+    margin-bottom: var(--mds-spacing-xs, 0.5rem);
+}
+.spiffy-entry-fields {
+    display: grid;
+    grid-template-columns: minmax(6rem, max-content) 1fr;
+    gap: var(--mds-spacing-xxs, 0.25rem) var(--mds-spacing-sm, 0.75rem);
+    margin: 0;
+}
+.spiffy-entry-fields dt {
+    font-weight: var(--mds-font-weight-semibold, 600);
+    color: var(--mds-text-subtle, var(--bs-secondary-color));
+}
+.spiffy-entry-fields dd {
+    margin: 0;
+}
+.spiffy-required {
+    color: var(--mds-text-feedback-danger, var(--bs-danger-text-emphasis));
+    font-size: 0.875rem;
+    font-weight: normal;
+}
+.spiffy-reactions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mds-spacing-xs, 0.5rem);
+    margin-top: var(--mds-spacing-xs, 0.5rem);
+}
+.spiffy-reactions:empty {
+    display: none;
+}
+.spiffy-reactions-rating,
+.spiffy-rate {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-xs, 0.5rem);
+}
+.spiffy-rate .form-select {
+    width: auto;
+    min-height: 2.25rem;
+}
+.spiffy-comments {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mds-spacing-xxs, 0.25rem);
+    margin: 0;
+    padding-left: var(--mds-spacing-sm, 0.75rem);
+    border-left: 2px solid var(--mds-border-subtle, var(--bs-border-color));
+}
+.spiffy-comment-text {
+    font-size: 0.9375rem;
+}
+.spiffy-forum-reply .btn,
+.spiffy-glossary-form .btn,
+.spiffy-data-form .btn,
+.spiffy-rate .btn,
+.spiffy-comment-form .btn {
+    min-height: 2.75rem;
+}
+
+/* A card in a narrow column stacks entry labels over their values, as on phones. */
+.spiffy-inline-region {
+    container: spiffy-inline / inline-size; /* stylelint-disable-line csstree/validator -- container queries. */
+}
+
+@container spiffy-inline (max-width: 22rem) { /* stylelint-disable-line csstree/validator */
+    .spiffy-entry-fields {
+        grid-template-columns: 1fr;
+    }
+    .spiffy-entry-fields dd {
+        margin-bottom: var(--mds-spacing-xxs, 0.25rem);
+    }
+}
+
+@media (max-width: 575.98px) {
+    .spiffy-entry-fields {
+        grid-template-columns: 1fr;
+    }
+    .spiffy-entry-fields dd {
+        margin-bottom: var(--mds-spacing-xxs, 0.25rem);
+    }
+    .spiffy-forum-replies {
+        padding-left: var(--mds-spacing-xs, 0.5rem);
+    }
+}
+
+/* ---- assign-lesson ---- */
+/* Assignment and lesson cards. */
+.spiffy-assign-status,
+.spiffy-lesson-position {
+    color: var(--mds-text-subtle, var(--bs-secondary-color));
+}
+.spiffy-assign-text {
+    min-height: 6rem;
+    resize: vertical;
+}
+.spiffy-assign-answer {
+    padding: .5rem .75rem;
+    border-inline-start: 3px solid var(--mds-border-interactive-primary-default, var(--bs-primary));
+    background: var(--mds-bg-surface-subtle, var(--bs-tertiary-bg));
+    border-radius: var(--mds-border-radius-sm, var(--bs-border-radius-sm));
+    overflow-wrap: anywhere;
+}
+.spiffy-assign-answer > :last-child,
+.spiffy-assign-feedback > :last-child,
+.spiffy-lesson-feedback > :last-child,
+.spiffy-lesson-contents > :last-child {
+    margin-bottom: 0;
+}
+.spiffy-assign-edit-toggle {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    cursor: pointer;
+    color: var(--mds-text-link-primary-default, var(--bs-link-color));
+}
+.spiffy-assign-edit-toggle:focus-visible {
+    outline: 2px solid var(--mds-focus-default, var(--bs-focus-ring-color, currentColor));
+    outline-offset: 2px;
+}
+.spiffy-assign-edit[open] > .spiffy-assign-edit-toggle {
+    margin-bottom: .5rem;
+}
+.spiffy-lesson-contents {
+    overflow-wrap: anywhere;
+}
+.spiffy-lesson-contents img {
+    max-width: 100%;
+    height: auto;
+}
+.spiffy-lesson-number {
+    max-width: 12rem;
+}
+.spiffy-assign-buttons .btn,
+.spiffy-lesson-buttons .btn,
+.spiffy-lesson-answer .btn {
+    min-height: 44px;
+}
+
+/* ---- page-book-resource-url ---- */
+/* Page and Book on a card: a native details expander with a teaser while closed. */
+.format-spiffy .spiffy-readmore-summary {
+    display: block;
+    cursor: pointer;
+    list-style: none;
+    border-radius: var(--mds-border-radius-md, 0.5rem);
+}
+.format-spiffy .spiffy-readmore-summary::-webkit-details-marker {
+    display: none;
+}
+.format-spiffy .spiffy-readmore-summary:focus-visible {
+    outline: 2px solid var(--mds-focus-default, var(--bs-primary));
+    outline-offset: 2px;
+}
+.format-spiffy .spiffy-readmore-excerpt {
+    display: block;
+    color: var(--spiffy-text, var(--bs-body-color));
+}
+.format-spiffy .spiffy-readmore-more,
+.format-spiffy .spiffy-readmore-less {
+    display: inline-block;
+    margin-top: var(--mds-spacing-xs, 0.25rem);
+    color: var(--mds-text-link-primary-default, var(--bs-link-color));
+    font-weight: 600;
+    text-decoration: underline;
+}
+.format-spiffy .spiffy-readmore-less,
+.format-spiffy .spiffy-readmore[open] .spiffy-readmore-excerpt,
+.format-spiffy .spiffy-readmore[open] .spiffy-readmore-more {
+    display: none;
+}
+.format-spiffy .spiffy-readmore[open] .spiffy-readmore-less {
+    display: inline-block;
+    margin: 0 0 var(--mds-spacing-sm, 0.5rem);
+}
+.format-spiffy .spiffy-readmore-content {
+    overflow-wrap: anywhere;
+}
+.format-spiffy .spiffy-readmore-content img {
+    max-width: 100%;
+    height: auto;
+}
+.format-spiffy .spiffy-markread {
+    margin-top: var(--mds-spacing-md, 1rem);
+}
+/* Book: chapter list and chapters. */
+.format-spiffy .spiffy-book-toc {
+    margin: 0 0 var(--mds-spacing-sm, 0.5rem);
+    padding-left: 1.25rem;
+    color: var(--spiffy-muted, var(--bs-secondary-color));
+}
+.format-spiffy .spiffy-book-toc-item.is-sub {
+    margin-left: 1rem;
+    list-style-type: circle;
+}
+.format-spiffy .spiffy-book-chapter + .spiffy-book-chapter {
+    margin-top: var(--mds-spacing-md, 1rem);
+    padding-top: var(--mds-spacing-md, 1rem);
+    border-top: 1px solid var(--spiffy-border, var(--bs-border-color));
+}
+.format-spiffy .spiffy-book-chapter-title {
+    font-size: 1rem;
+    font-weight: 600;
+}
+.format-spiffy .spiffy-book-chapter.is-sub .spiffy-book-chapter-title {
+    font-size: 0.95rem;
+}
+/* File: PDF preview and image. */
+.format-spiffy .spiffy-resource-pdf object {
+    display: block;
+    width: 100%;
+    height: min(70vh, 40rem); /* stylelint-disable-line csstree/validator */
+    border: 1px solid var(--spiffy-border, var(--bs-border-color));
+    border-radius: var(--mds-border-radius-md, 0.5rem);
+    background: var(--spiffy-surface, var(--bs-body-bg));
+}
+.format-spiffy .spiffy-resource-fallback {
+    padding: var(--mds-spacing-md, 1rem);
+    color: var(--spiffy-muted, var(--bs-secondary-color));
+}
+.format-spiffy .spiffy-resource-image {
+    display: block;
+    border-radius: var(--mds-border-radius-md, 0.5rem);
+}
+.format-spiffy .spiffy-resource-links {
+    margin: var(--mds-spacing-sm, 0.5rem) 0 0;
+}
+/* URL: YouTube in a 16:9 frame. */
+.format-spiffy .spiffy-video {
+    overflow: hidden;
+    border-radius: var(--mds-border-radius-md, 0.5rem);
+    background: var(--mds-bg-surface-strong, var(--bs-tertiary-bg));
+}
+.format-spiffy .spiffy-video iframe {
+    border: 0;
+}
+
+@media (max-width: 575.98px) {
+    .format-spiffy .spiffy-resource-pdf object {
+        height: 60vh;
+    }
+}
+
+/* ---- student-tools ---- */
+/* Student tools on a card: the confidence check, "My notes" (a yellow sticky note)
+   and "Ask my teacher" (blue, with the teacher's photo). */
+.format-spiffy {
+    --spiffy-sticky-bg: #fff4bf;
+    --spiffy-sticky-border: #e3c75a;
+    --spiffy-sticky-text: #3d3200;
+    --spiffy-sticky-button: var(--mds-color-yellow-500, #f2c94c);
+    --spiffy-ask-bg: var(--bs-primary-bg-subtle, #e7f0ff);
+    --spiffy-ask-border: var(--bs-primary-border-subtle, #9ec5fe);
+    --spiffy-ask-accent: var(--mds-bg-interactive-primary-default, var(--bs-primary));
+    --spiffy-ask-text: var(--bs-primary-text-emphasis, #052c65);
+}
+[data-bs-theme="dark"] .format-spiffy {
+    --spiffy-sticky-bg: #3a3310;
+    --spiffy-sticky-border: #8a7420;
+    --spiffy-sticky-text: #fbeaa0;
+}
+.format-spiffy .spiffy-tools {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mds-spacing-sm, 0.5rem);
+    margin-top: var(--mds-spacing-md, 1rem);
+    padding-top: var(--mds-spacing-sm, 0.5rem);
+    border-top: 1px dashed var(--spiffy-border);
+}
+.format-spiffy .spiffy-tools-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mds-spacing-sm, 0.5rem);
+}
+.format-spiffy .spiffy-tool[open] {
+    flex-basis: 100%;
+}
+.format-spiffy .spiffy-tool-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mds-spacing-xs, 0.35rem);
+    min-height: 2.75rem;
+    padding: var(--mds-spacing-xxs, 0.25rem) var(--mds-spacing-md, 0.75rem);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: var(--mds-font-weight-semibold, 600);
+    list-style: none;
+    cursor: pointer;
+}
+.format-spiffy .spiffy-tool-toggle::-webkit-details-marker {
+    display: none;
+}
+.format-spiffy .spiffy-tool-toggle:focus-visible,
+.format-spiffy .spiffy-confidence-option:focus-visible {
+    outline: 2px solid var(--spiffy-ask-accent);
+    outline-offset: 2px;
+}
+.format-spiffy .spiffy-tool[open] > .spiffy-tool-toggle {
+    margin-bottom: var(--mds-spacing-sm, 0.5rem);
+}
+.format-spiffy .spiffy-tool-toggle--note {
+    background: var(--spiffy-sticky-bg);
+    border-color: var(--spiffy-sticky-border);
+    color: var(--spiffy-sticky-text);
+}
+.format-spiffy .spiffy-tool-toggle--ask {
+    background: var(--spiffy-ask-bg);
+    border-color: var(--spiffy-ask-border);
+    color: var(--spiffy-ask-text);
+}
+.format-spiffy .spiffy-tool-toggle .icon {
+    margin: 0;
+}
+
+/* My notes: a sticky note with a padlock. */
+.format-spiffy .spiffy-sticky {
+    padding: var(--mds-spacing-md, 0.75rem);
+    background: var(--spiffy-sticky-bg);
+    border: 1px solid var(--spiffy-sticky-border);
+    border-radius: 0.25rem 0.25rem 0.25rem 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    color: var(--spiffy-sticky-text);
+}
+.format-spiffy .spiffy-sticky-private {
+    display: flex;
+    align-items: center;
+    gap: var(--mds-spacing-xs, 0.35rem);
+    margin: 0 0 var(--mds-spacing-sm, 0.5rem);
+    font-size: 0.8125rem;
+    font-weight: var(--mds-font-weight-semibold, 600);
+}
+.format-spiffy .spiffy-sticky-text {
+    background: transparent;
+    border-color: var(--spiffy-sticky-border);
+    color: inherit;
+}
+.format-spiffy .spiffy-sticky-text:focus {
+    background: transparent;
+    color: inherit;
+}
+.format-spiffy .spiffy-sticky-save {
+    background: var(--spiffy-sticky-button);
+    border-color: var(--spiffy-sticky-border);
+    color: #3d3200;
+}
+.format-spiffy .spiffy-sticky-save:hover,
+.format-spiffy .spiffy-sticky-save:focus-visible {
+    background: #e0b52f;
+    color: #2b2300;
+}
+
+/* Ask my teacher: blue, with the teacher's photo and name. */
+.format-spiffy .spiffy-ask {
+    padding: var(--mds-spacing-md, 0.75rem);
+    background: var(--spiffy-ask-bg);
+    border: 1px solid var(--spiffy-ask-border);
+    border-left: 4px solid var(--spiffy-ask-accent);
+    border-radius: 0.5rem;
+    color: var(--spiffy-text);
+}
+.format-spiffy .spiffy-ask-to {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-sm, 0.5rem);
+    margin-bottom: var(--mds-spacing-sm, 0.5rem);
+}
+.format-spiffy .spiffy-ask-photo {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--spiffy-ask-accent);
+    border-radius: 50%;
+    object-fit: cover;
+}
+.format-spiffy .spiffy-ask-name,
+.format-spiffy .spiffy-ask-label {
+    font-weight: var(--mds-font-weight-semibold, 600);
+    color: var(--spiffy-ask-text);
+}
+.format-spiffy .spiffy-ask-label {
+    margin-bottom: var(--mds-spacing-xxs, 0.25rem);
+}
+.format-spiffy .spiffy-ask-select {
+    width: auto;
+    max-width: 100%;
+}
+.format-spiffy .spiffy-ask-hint {
+    margin: var(--mds-spacing-xxs, 0.25rem) 0 0;
+    font-size: 0.8125rem;
+    color: var(--spiffy-muted);
+}
+.format-spiffy .spiffy-ask-confirm {
+    margin-top: var(--mds-spacing-sm, 0.5rem);
+    padding: var(--mds-spacing-sm, 0.5rem) var(--mds-spacing-md, 0.75rem);
+    background: var(--spiffy-surface);
+    border: 1px solid var(--spiffy-ask-accent);
+    border-radius: 0.375rem;
+}
+.format-spiffy .spiffy-ask-confirm-text {
+    margin: 0;
+    font-weight: var(--mds-font-weight-bold, 700);
+}
+.format-spiffy .spiffy-ask-confirm-text:focus {
+    outline: none;
+}
+.format-spiffy .spiffy-tool-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-sm, 0.5rem);
+    margin-top: var(--mds-spacing-sm, 0.5rem);
+}
+.format-spiffy .spiffy-tool-actions[hidden],
+.format-spiffy .spiffy-ask-confirm[hidden] {
+    display: none;
+}
+.format-spiffy .spiffy-tool-status {
+    font-size: 0.875rem;
+    font-weight: var(--mds-font-weight-semibold, 600);
+}
+
+/* Confidence check on done cards: three faces. */
+.format-spiffy .spiffy-confidence {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-sm, 0.5rem);
+}
+.format-spiffy .spiffy-confidence-label {
+    font-size: 0.875rem;
+    font-weight: var(--mds-font-weight-semibold, 600);
+}
+.format-spiffy .spiffy-confidence-options {
+    display: inline-flex;
+    gap: var(--mds-spacing-xxs, 0.25rem);
+}
+.format-spiffy .spiffy-confidence-option {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: var(--mds-spacing-xxs, 0.25rem);
+    background: var(--mds-bg-surface-subtle, var(--bs-tertiary-bg));
+    border: 2px solid transparent;
+    border-radius: 50%;
+    font-size: 1.35rem;
+    line-height: 1;
+    transition: transform 0.15s ease;
+}
+.format-spiffy .spiffy-confidence-option:hover {
+    transform: scale(1.1);
+}
+.format-spiffy .spiffy-confidence-option[aria-pressed="true"] {
+    background: var(--bs-success-bg-subtle, #d1e7dd);
+    border-color: var(--mds-text-feedback-success, var(--bs-success));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .format-spiffy .spiffy-confidence-option {
+        transition: none;
+    }
+    .format-spiffy .spiffy-confidence-option:hover {
+        transform: none;
+    }
+}
+
+/* ---- teacher-side ---- */
+/* Teacher side: pencil menu, teacher panel on cards, teacher spotlight. */
+.format-spiffy .spiffy-pencil {
+    position: absolute;
+    top: var(--mds-spacing-xs, 0.25rem);
+    inset-inline-end: var(--mds-spacing-xs, 0.25rem);
+    z-index: 3;
+}
+
+.format-spiffy .spiffy-pencil-toggle {
+    width: 2.75rem;
+    height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--mds-text-emphasis, var(--bs-emphasis-color));
+    background-color: var(--mds-bg-surface-default, var(--bs-body-bg));
+    border: 1px solid var(--spiffy-border, var(--bs-border-color));
+    opacity: 0.4;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.format-spiffy .spiffy-pencil-toggle .icon {
+    margin: 0;
+}
+
+.format-spiffy .spiffy-card:hover .spiffy-pencil-toggle,
+.format-spiffy .spiffy-card:focus-within .spiffy-pencil-toggle,
+.format-spiffy .spiffy-pencil-toggle[aria-expanded="true"] {
+    opacity: 1;
+}
+
+.format-spiffy .spiffy-pencil-toggle:focus-visible {
+    outline: 3px solid var(--mds-border-interactive-primary-default, var(--bs-primary));
+    outline-offset: 2px;
+}
+
+@media (hover: none) {
+    .format-spiffy .spiffy-pencil-toggle {
+        opacity: 1;
+    }
+}
+
+.format-spiffy .spiffy-pencil .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: var(--mds-spacing-xs, 0.25rem);
+    min-height: 2.5rem;
+}
+
+/* Keep the title clear of the pencil. */
+.format-spiffy .spiffy-card:has(.spiffy-pencil) .spiffy-card-head {
+    padding-inline-end: 2.5rem;
+}
+
+.format-spiffy .spiffy-teacher-panel {
+    margin-top: var(--mds-spacing-md, 1rem);
+    padding: var(--mds-spacing-sm, 0.5rem) var(--mds-spacing-md, 1rem);
+    border: 1px dashed var(--mds-border-default, var(--bs-border-color));
+    border-radius: var(--mds-border-radius-md, 0.5rem);
+    background-color: var(--mds-bg-surface-subtle, var(--bs-tertiary-bg));
+    display: flex;
+    flex-direction: column;
+    gap: var(--mds-spacing-xs, 0.25rem);
+    font-size: 0.875rem;
+}
+
+.format-spiffy .spiffy-teacher-heading {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--mds-spacing-xxs, 0.125rem);
+    color: var(--spiffy-muted, var(--bs-secondary-color));
+    font-weight: var(--mds-font-weight-semibold, 600);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.75rem;
+}
+
+.format-spiffy .spiffy-teacher-counts,
+.format-spiffy .spiffy-teacher-totals,
+.format-spiffy .spiffy-teacher-actions,
+.format-spiffy .spiffy-teacher-confidence-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-xs, 0.25rem);
+    margin: 0;
+}
+
+.format-spiffy .spiffy-teacher-badge {
+    font-weight: var(--mds-font-weight-semibold, 600);
+    color: var(--mds-text-emphasis, var(--bs-emphasis-color));
+    background-color: var(--bs-secondary-bg-subtle);
+    border: 1px solid var(--bs-border-color);
+    text-decoration: none;
+}
+
+.format-spiffy a.spiffy-teacher-badge:hover,
+.format-spiffy a.spiffy-teacher-badge:focus-visible {
+    text-decoration: underline;
+}
+
+.format-spiffy .spiffy-teacher-badge--grading,
+.format-spiffy .spiffy-teacher-badge--approval,
+.format-spiffy .spiffy-teacher-badge--approvals {
+    color: var(--bs-warning-text-emphasis);
+    background-color: var(--bs-warning-bg-subtle);
+    border-color: var(--bs-warning-border-subtle);
+}
+
+.format-spiffy .spiffy-teacher-badge--questions {
+    color: var(--bs-info-text-emphasis);
+    background-color: var(--bs-info-bg-subtle);
+    border-color: var(--bs-info-border-subtle);
+}
+
+.format-spiffy .spiffy-teacher-badge--stuck {
+    color: var(--bs-danger-text-emphasis);
+    background-color: var(--bs-danger-bg-subtle);
+    border-color: var(--bs-danger-border-subtle);
+}
+
+.format-spiffy .spiffy-teacher-questions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mds-spacing-xs, 0.25rem);
+}
+
+.format-spiffy .spiffy-teacher-questions-label {
+    margin: 0;
+}
+
+.format-spiffy .spiffy-teacher-askers {
+    color: var(--spiffy-muted, var(--bs-secondary-color));
+}
+
+.format-spiffy .spiffy-teacher-confidence {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-sm, 0.5rem);
+}
+
+.format-spiffy .spiffy-teacher-confidence-list li {
+    font-variant-numeric: tabular-nums;
+}
+
+.format-spiffy .spiffy-teacher-actions .btn,
+.format-spiffy .spiffy-teacher-message > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mds-spacing-xxs, 0.125rem);
+    min-height: 2.25rem;
+    /* In a narrow card the label wraps; btn-sm's line height would draw the lines over each other. */
+    line-height: 1.3;
+    text-align: start;
+}
+
+.format-spiffy .spiffy-teacher-message > summary {
+    list-style: none;
+}
+
+.format-spiffy .spiffy-teacher-message > summary::-webkit-details-marker {
+    display: none;
+}
+
+.format-spiffy .spiffy-teacher-message-form {
+    margin-top: var(--mds-spacing-sm, 0.5rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--mds-spacing-xs, 0.25rem);
+}
+
+.format-spiffy .spiffy-teacher-confirm {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-xs, 0.25rem);
+    padding: var(--mds-spacing-sm, 0.5rem);
+    border-radius: var(--mds-border-radius-md, 0.5rem);
+    background-color: var(--bs-warning-bg-subtle);
+    color: var(--bs-warning-text-emphasis);
+}
+
+.format-spiffy .spiffy-teacher-confirm[hidden],
+.format-spiffy .spiffy-teacher-message-actions[hidden] {
+    display: none;
+}
+
+.format-spiffy .spiffy-teacher-confirm p {
+    flex-basis: 100%;
+    margin: 0;
+    font-weight: var(--mds-font-weight-semibold, 600);
+}
+
+.format-spiffy .spiffy-teacher-status {
+    margin: 0;
+}
+
+.format-spiffy .spiffy-teacher-status:empty {
+    display: none;
+}
+
+/* Teacher spotlight. */
+.format-spiffy .spiffy-teacher-spotlight {
+    margin-bottom: var(--mds-spacing-lg, 1.5rem);
+}
+
+.format-spiffy .spiffy-teacher-attention {
+    border: 1px solid var(--spiffy-border, var(--bs-border-color));
+    border-radius: var(--spiffy-radius, 1rem);
+    background-color: var(--mds-bg-surface-default, var(--bs-body-bg));
+    padding: var(--mds-spacing-md, 1rem) var(--mds-spacing-lg, 1.5rem);
+}
+
+.format-spiffy .spiffy-teacher-attention-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-sm, 0.5rem);
+    cursor: pointer;
+}
+
+.format-spiffy .spiffy-teacher-attention-title {
+    display: inline;
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: var(--mds-font-weight-bold, 700);
+}
+
+.format-spiffy .spiffy-teacher-attention-body {
+    margin-top: var(--mds-spacing-sm, 0.5rem);
+}
+
+.format-spiffy .spiffy-teacher-items {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--mds-spacing-xs, 0.25rem);
+}
+
+.format-spiffy .spiffy-teacher-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-sm, 0.5rem);
+    padding: var(--mds-spacing-xs, 0.25rem) 0;
+    border-bottom: 1px solid var(--spiffy-border, var(--bs-border-color));
+}
+
+.format-spiffy .spiffy-teacher-item:last-child {
+    border-bottom: 0;
+}
+
+.format-spiffy .spiffy-teacher-item-name {
+    flex: 1 1 12rem;
+    font-weight: var(--mds-font-weight-semibold, 600);
+}
+
+.format-spiffy .spiffy-teacher-preview {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-sm, 0.5rem);
+    margin: var(--mds-spacing-md, 1rem) 0 0;
+}
+
+.format-spiffy .spiffy-teacher-preview .btn,
+.format-spiffy .spiffy-teacher-previewbar .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mds-spacing-xxs, 0.125rem);
+}
+
+.format-spiffy .spiffy-teacher-previewbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-sm, 0.5rem);
+    padding: var(--mds-spacing-sm, 0.5rem) var(--mds-spacing-md, 1rem);
+    border-radius: var(--spiffy-radius, 1rem);
+    color: var(--bs-info-text-emphasis);
+    background-color: var(--bs-info-bg-subtle);
+    border: 1px solid var(--bs-info-border-subtle);
+}
+
+.format-spiffy .spiffy-teacher-previewbar > span {
+    flex: 1 1 14rem;
+    font-weight: var(--mds-font-weight-semibold, 600);
+}
+
+.format-spiffy .spiffy-item:focus-visible {
+    outline: 3px solid var(--mds-border-interactive-primary-default, var(--bs-primary));
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .format-spiffy .spiffy-pencil-toggle {
+        transition: none;
+    }
+}
+
+/* Card designs (course setting "Card design"). Soft, the default, is the card above: tinted, with
+ * a coloured top edge. The others keep the accent colour, so locked and done cards still change
+ * colour, and only set their own background on cards that are not locked. */
+.format-spiffy.spiffy-cardstyle-outline .spiffy-card {
+    border: 2px solid color-mix(in srgb, var(--spiffy-accent) 70%, var(--spiffy-border));
+    box-shadow: none;
+}
+
+.format-spiffy.spiffy-cardstyle-outline .spiffy-card:not(.spiffy-card--locked) {
+    background-color: var(--spiffy-surface);
+}
+
+.format-spiffy.spiffy-cardstyle-outline.spiffy-view-spotlight .spiffy-card.spiffy-is-stage {
+    border-width: 3px;
+    box-shadow: 0 24px 48px -32px rgba(0, 0, 0, 0.3);
+}
+
+.format-spiffy.spiffy-cardstyle-outline.spiffy-view-spotlight .spiffy-card.spiffy-is-tile,
+.format-spiffy.spiffy-cardstyle-outline.spiffy-view-spotlight .spiffy-card.spiffy-card--done:not(.spiffy-is-stage) {
+    border-width: 2px;
+}
+
+.format-spiffy.spiffy-cardstyle-flat .spiffy-card {
+    border: 0;
+    border-left: 6px solid var(--spiffy-accent);
+    border-radius: calc(var(--spiffy-radius) / 2);
+    box-shadow: none;
+}
+
+.format-spiffy.spiffy-cardstyle-flat .spiffy-card:not(.spiffy-card--locked) {
+    background-color: color-mix(in srgb, var(--spiffy-accent) 5%, var(--mds-bg-surface-subtle, var(--bs-tertiary-bg)));
+}
+
+.format-spiffy.spiffy-cardstyle-flat.spiffy-view-spotlight .spiffy-card.spiffy-is-stage {
+    border-left-width: 8px;
+    box-shadow: none;
+}
+
+.format-spiffy.spiffy-cardstyle-lifted .spiffy-card {
+    border: 1px solid color-mix(in srgb, var(--spiffy-border) 50%, transparent);
+    background-image: linear-gradient(var(--spiffy-accent), var(--spiffy-accent));
+    background-repeat: no-repeat;
+    background-position: var(--mds-spacing-lg, 1.5rem) 0;
+    background-size: 3rem 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 18px 36px -18px rgba(0, 0, 0, 0.35);
+}
+
+.format-spiffy.spiffy-cardstyle-lifted .spiffy-card:not(.spiffy-card--locked) {
+    background-color: var(--spiffy-surface);
+}
+
+.format-spiffy.spiffy-cardstyle-lifted.spiffy-view-spotlight .spiffy-card.spiffy-is-stage {
+    border-top-width: 1px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), 0 32px 56px -24px rgba(0, 0, 0, 0.4);
+}
+
+.format-spiffy.spiffy-cardstyle-lifted.spiffy-view-spotlight .spiffy-card.spiffy-is-tile,
+.format-spiffy.spiffy-cardstyle-lifted.spiffy-view-spotlight .spiffy-card.spiffy-card--done:not(.spiffy-is-stage) {
+    border-top-width: 1px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Page width (course setting). course/view.php marks the page "limitedwidth", which Boost holds
+ * to its course content width; wide and full let the course page use more of a large screen.
+ * The page header and the course tabs widen with it, so they stay lined up with the content. */
+body.spiffy-width-wide.pagelayout-course {
+    --spiffy-page-maxwidth: 1320px;
+}
+
+body.spiffy-width-full.pagelayout-course {
+    --spiffy-page-maxwidth: none;
+}
+
+/* Boost (5.3) floats the course index and block drawers beside a content column of its course
+ * width ($course-content-maxwidth, 830px) on "limitedwidth" pages. With a wider column the same
+ * anchor formulas are used with this width instead; Boost's Min() clamps then put a drawer at the
+ * window edge when there is no room beside the column, where #page's drawer margin keeps it clear
+ * of the content. Values from theme/boost/scss/moodle/drawer.scss and layout.scss. */
+body.spiffy-width-wide.pagelayout-course {
+    --spiffy-anchor-width: 1320px;
+}
+
+body.spiffy-width-full.pagelayout-course {
+    --spiffy-anchor-width: 100vw;
+}
+
+body.spiffy-widened.pagelayout-course {
+    --spiffy-drawer-gap: calc(0.5rem + 20px);
+    --spiffy-anchor-none: calc(50% + var(--spiffy-anchor-width) / 2 + var(--spiffy-drawer-gap));
+}
+
+@media (min-width: 992px) {
+    /* The :not(#...) pairs only raise specificity above Boost's :has(#page...) selectors. */
+    body.limitedwidth.spiffy-widened:not(#spiffy-a):not(#spiffy-b) .drawer.drawer-left,
+    body.limitedwidth.spiffy-widened:not(#spiffy-a):not(#spiffy-b) .drawer.drawer-left.show {
+        right: var(--spiffy-anchor-none);
+    }
+
+    body.limitedwidth.spiffy-widened:not(#spiffy-a):not(#spiffy-b) .drawer.drawer-right,
+    body.limitedwidth.spiffy-widened:not(#spiffy-a):not(#spiffy-b) .drawer.drawer-right.show {
+        left: var(--spiffy-anchor-none);
+    }
+
+    body.limitedwidth.spiffy-widened:not(#spiffy-a):not(#spiffy-b) .drawer-toggles .drawer-left-toggle {
+        right: min(var(--spiffy-anchor-none), calc(100% - 40px - 2 * 16px));
+    }
+
+    body.limitedwidth.spiffy-widened:not(#spiffy-a):not(#spiffy-b) .drawer-toggles .drawer-right-toggle {
+        left: min(var(--spiffy-anchor-none), calc(100% - 40px - 2 * 16px));
+    }
+
+    /* Course index open. */
+    body.spiffy-widened:has(.show-drawer-left):not(:has(.show-drawer-right)) {
+        --spiffy-anchor-left-at: calc(50% + var(--spiffy-anchor-width) / 2 - 285px / 2 + var(--spiffy-drawer-gap));
+        --spiffy-anchor-left: min(var(--spiffy-anchor-left-at), calc(100% - 285px));
+        --spiffy-anchor-right: calc(50% + var(--spiffy-anchor-width) / 2 + var(--spiffy-drawer-gap) + 285px / 2);
+    }
+
+    /* Block drawer open. */
+    body.spiffy-widened:has(.show-drawer-right):not(:has(.show-drawer-left)) {
+        --spiffy-anchor-left: calc(50% + var(--spiffy-anchor-width) / 2 + var(--spiffy-drawer-gap) + 315px / 2);
+        --spiffy-anchor-right-at: calc(50% + var(--spiffy-anchor-width) / 2 - 315px / 2 + var(--spiffy-drawer-gap));
+        --spiffy-anchor-right: min(var(--spiffy-anchor-right-at), calc(100% - 315px));
+    }
+
+    /* Both open. */
+    body.spiffy-widened:has(.show-drawer-left.show-drawer-right) {
+        --spiffy-anchor-left-at: calc(50% + var(--spiffy-anchor-width) / 2 + 15px + var(--spiffy-drawer-gap));
+        --spiffy-anchor-left: min(var(--spiffy-anchor-left-at), calc(100% - 285px));
+        --spiffy-anchor-right-at: calc(50% + var(--spiffy-anchor-width) / 2 - 15px + var(--spiffy-drawer-gap));
+        --spiffy-anchor-right: min(var(--spiffy-anchor-right-at), calc(100% - 315px));
+    }
+
+    body.limitedwidth.spiffy-widened:not(#spiffy-a):not(#spiffy-b):has(#page.drawers:is(.show-drawer-left, .show-drawer-right))
+    .drawer.drawer-left,
+    body.limitedwidth.spiffy-widened:not(#spiffy-a):not(#spiffy-b):has(#page.drawers:is(.show-drawer-left, .show-drawer-right))
+    .drawer.drawer-left.show {
+        right: var(--spiffy-anchor-left);
+    }
+
+    body.limitedwidth.spiffy-widened:not(#spiffy-a):not(#spiffy-b):has(#page.drawers:is(.show-drawer-left, .show-drawer-right))
+    .drawer.drawer-right,
+    body.limitedwidth.spiffy-widened:not(#spiffy-a):not(#spiffy-b):has(#page.drawers:is(.show-drawer-left, .show-drawer-right))
+    .drawer.drawer-right.show {
+        left: var(--spiffy-anchor-right);
+    }
+
+    body.limitedwidth.spiffy-widened:not(#spiffy-a):not(#spiffy-b):has(#page.drawers:is(.show-drawer-left, .show-drawer-right))
+    .drawer-toggles .drawer-left-toggle {
+        right: min(var(--spiffy-anchor-left), calc(100% - 40px - 2 * 16px));
+    }
+
+    body.limitedwidth.spiffy-widened:not(#spiffy-a):not(#spiffy-b):has(#page.drawers:is(.show-drawer-left, .show-drawer-right))
+    .drawer-toggles .drawer-right-toggle {
+        left: min(var(--spiffy-anchor-right), calc(100% - 40px - 2 * 16px));
+    }
+}
+
+@media (min-width: 768px) {
+    body.spiffy-widened.pagelayout-course #page.drawers .main-inner,
+    body.spiffy-widened.pagelayout-course #page.drawers .footer-popover {
+        max-width: var(--spiffy-page-maxwidth);
+    }
+}
+
+body.spiffy-widened.pagelayout-course .header-maxwidth,
+body.spiffy-widened.pagelayout-course .secondary-navigation .secondarynav-tabbar {
+    max-width: var(--spiffy-page-maxwidth);
+}
+
+
+.format-spiffy .spiffy-whatsnext-subtitle {
+    margin: var(--mds-spacing-sm, 0.75rem) 0 var(--mds-spacing-xxs, 0.25rem);
+    font-size: 0.875rem;
+    font-weight: var(--mds-font-weight-semibold, 600);
+}
+
+/* Small buttons keep readable icons: core's small size shrinks them too far. */
+.format-spiffy .mds-btn.btn.mds-btn--size-sm:has(> i) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mds-spacing-xxs, 0.25rem);
+}
+
+.format-spiffy .mds-btn.btn.mds-btn--size-sm > i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    margin: 0 var(--mds-spacing-xxs, 0.25rem) 0 0;
+    font-size: 0.875rem;
+    line-height: 1;
+}

@@ -1,0 +1,58 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/local/spotlight_toolbar
+
+    The top of the Spiffy course page: "What's next" and the "Show me everything" toggle between
+    spotlight mode and the full list (canswitch: the course setting "Spotlight view"; nothing at all
+    when neither is on, hastoolbar). Context: format_spiffy\\local\\spotlight::export_page().
+
+    Example context (json):
+    {
+        "courseid": 2,
+        "viewmode": "spotlight",
+        "isspotlight": true,
+        "islist": false,
+        "canswitch": true,
+        "hastoolbar": true,
+        "stage": "3",
+        "whatsnext": {
+            "courseid": 2,
+            "hasitems": true,
+            "total": 1,
+            "more": "",
+            "main": {"items": [
+                {"cmid": 3, "name": "Write your introduction", "onpage": true, "url": "#card-3", "sectionname": "Week 1",
+                 "datetext": "Due: Friday", "badge": {"text": "Due soon", "type": "warning"}, "overdue": false}
+            ]},
+            "suggestions": false
+        }
+    }
+}}
+{{#hastoolbar}}
+<div class="spiffy-toolbar">
+    {{#whatsnext}}{{> format_spiffy/local/spotlight_whatsnext }}{{/whatsnext}}
+    {{#canswitch}}
+    <div class="spiffy-viewmode">
+        <button type="button" class="btn mds-btn btn-outline-secondary spiffy-viewmode-toggle" data-spiffy-viewtoggle
+            aria-pressed="{{#islist}}true{{/islist}}{{^islist}}false{{/islist}}">
+            {{#pix}} i/section, core {{/pix}}{{#str}} showeverything, format_spiffy {{/str}}
+        </button>
+    </div>
+    {{/canswitch}}
+</div>
+{{/hastoolbar}}

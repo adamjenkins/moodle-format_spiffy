@@ -1,0 +1,44 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/tools/confidence
+
+    The confidence check on a done card: one tap among three faces, each a toggle button with a
+    text label for screen readers. Sent by format_spiffy/tools to format_spiffy_set_confidence.
+
+    Example context (json):
+    {
+        "cmid": 3,
+        "confidence": [
+            {"value": 1, "face": "😟", "label": "Not confident", "pressed": false},
+            {"value": 2, "face": "😐", "label": "Unsure", "pressed": true},
+            {"value": 3, "face": "😀", "label": "Confident", "pressed": false}
+        ]
+    }
+}}
+<div class="spiffy-confidence" role="group" aria-labelledby="spiffy-confidence-label-{{cmid}}" data-region="spiffy-confidence" data-cmid="{{cmid}}">
+    <span class="spiffy-confidence-label" id="spiffy-confidence-label-{{cmid}}">{{#str}} confidencequestion, format_spiffy {{/str}}</span>
+    <span class="spiffy-confidence-options">
+        {{#confidence}}
+            <button type="button" class="btn mds-btn spiffy-confidence-option" data-spiffy-confidence="{{value}}"
+                aria-pressed="{{#pressed}}true{{/pressed}}{{^pressed}}false{{/pressed}}" title="{{label}}">
+                <span class="spiffy-confidence-face" aria-hidden="true">{{face}}</span><span class="visually-hidden">{{label}}</span>
+            </button>
+        {{/confidence}}
+    </span>
+    <span class="spiffy-tool-status" data-region="spiffy-tool-status" role="status" aria-live="polite"></span>
+</div>

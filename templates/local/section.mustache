@@ -1,0 +1,107 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/local/section
+
+    One section of the Spiffy course page: an island with an optional label, its name and
+    summary, its progress ring, then its activities as step cards, text-and-media notes and
+    subsection islands (format_spiffy/local/spotlight_cards). In spotlight mode the page script
+    shrinks it to a compact island, with a button to show its activities, unless one of its cards
+    is on centre stage (never the General section when spiffyalwaysopen, the course setting
+    "General section always open": it has no hide button either). Also rendered on its own by format_spiffy_get_sections and
+    format_spiffy_inline_action, so the page can replace a section without a reload; it must not
+    use the uniqid helper or a js block, and it carries no spotlight state (the script applies that).
+
+    Example context (json):
+    {
+        "id": 10,
+        "num": 1,
+        "columns": 3,
+        "sectionname": "Get ready for IVEProject",
+        "spiffyeyebrow": "Before we begin",
+        "spiffytitle": "Get ready for IVEProject",
+        "spiffylocked": false,
+        "spiffyalwaysopen": false,
+        "summary": {"summarytext": "<p>Complete the activities below in order.</p>"},
+        "spiffyprogress": {"done": 1, "total": 3, "percent": 33, "complete": false, "hasprogress": true, "label": "1 of 3 done"},
+        "hasspiffyitems": true,
+        "spiffyitems": [
+            {
+                "id": 3,
+                "anchor": "module-3",
+                "module": "forum",
+                "cmformat": {
+                    "cmid": 3,
+                    "activityname": "Learn how to communicate here",
+                    "url": "#",
+                    "spiffystep": true,
+                    "spiffyheadinglevel": 3,
+                    "spiffytracked": true,
+                    "spiffystate": "available",
+                    "spiffynumber": 1,
+                    "spiffyaccent": "green",
+                    "spiffytitle": "Step 1: Learn how to communicate here",
+                    "spiffybuttonlabel": "Practise in the forum",
+                    "spiffyavailable": true,
+                    "spiffyunlockhint": "Complete this step to unlock Step 2."
+                }
+            }
+        ]
+    }
+}}
+<section id="section-{{num}}"
+    class="spiffy-section spiffy-island{{#spiffyprogress.complete}} spiffy-section--complete{{/spiffyprogress.complete}}{{#spiffylocked}} spiffy-section--locked{{/spiffylocked}}{{#ishidden}} spiffy-section--hidden{{/ishidden}}{{#iscurrent}} current{{/iscurrent}}"
+    data-sectionid="{{id}}" data-number="{{num}}" data-sectionname="{{sectionname}}" data-spiffy-island="{{id}}"{{#spiffyalwaysopen}} data-spiffy-alwaysopen="1"{{/spiffyalwaysopen}}
+    data-spiffy-complete="{{#spiffyprogress.complete}}1{{/spiffyprogress.complete}}{{^spiffyprogress.complete}}0{{/spiffyprogress.complete}}"
+    {{#spiffytitle}}aria-labelledby="spiffy-section-title-{{id}}"{{/spiffytitle}}{{^spiffytitle}}aria-label="{{sectionname}}"{{/spiffytitle}}>
+    <div class="spiffy-section-head spiffy-island-head">
+        {{#spiffyeyebrow}}<p class="spiffy-eyebrow">{{{spiffyeyebrow}}}</p>{{/spiffyeyebrow}}
+        {{#spiffytitle}}
+            <h2 class="spiffy-section-title" id="spiffy-section-title-{{id}}">
+                {{#spiffylocked}}{{#pix}} t/locked, core {{/pix}}{{/spiffylocked}}{{{spiffytitle}}}
+            </h2>
+        {{/spiffytitle}}
+        {{^spiffytitle}}
+            <p class="spiffy-island-name" aria-hidden="true">{{{sectionname}}}</p>
+        {{/spiffytitle}}
+        <div class="spiffy-badges">
+            {{> core_courseformat/local/content/section/badges }}
+        </div>
+        {{#summary.summarytext}}
+            <div class="spiffy-section-summary">{{{summary.summarytext}}}</div>
+        {{/summary.summarytext}}
+        {{#availability}}
+            <div class="spiffy-section-availability">
+                {{> core_courseformat/local/content/section/availability }}
+            </div>
+        {{/availability}}
+        {{#hasspiffyitems}}
+        <div class="spiffy-island-bar">
+            {{#spiffyprogress.hasprogress}}{{#spiffyprogress}}{{> format_spiffy/local/spotlight_ring }}{{/spiffyprogress}}{{/spiffyprogress.hasprogress}}
+            {{^spiffyalwaysopen}}
+            <button type="button" class="btn mds-btn btn-primary spiffy-island-toggle" data-spiffy-toggle aria-expanded="true" aria-controls="spiffy-cards-{{id}}">
+                <span class="spiffy-toggle-show">{{#str}} showactivities, format_spiffy {{/str}}</span>
+                <span class="spiffy-toggle-hide">{{#str}} hideactivities, format_spiffy {{/str}}</span>
+            </button>
+            {{/spiffyalwaysopen}}
+        </div>
+        {{/hasspiffyitems}}
+    </div>
+    {{#hasspiffyitems}}
+        {{> format_spiffy/local/spotlight_cards }}
+    {{/hasspiffyitems}}
+</section>

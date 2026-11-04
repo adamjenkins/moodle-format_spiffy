@@ -1,0 +1,26 @@
+{{!
+    @template format_spiffy/local/spotlight_whatsnext_list
+
+    A list of "What's next" items, each a link to its card, on this page or on the course page.
+
+    Example context (json):
+    {
+        "issuggestions": false,
+        "items": [
+            {"cmid": 3, "name": "Write your introduction", "onpage": true, "url": "#card-3", "sectionname": "Week 1",
+             "datetext": "Due: Friday", "badge": {"text": "Due soon", "type": "warning"}, "overdue": false}
+        ]
+    }
+}}
+<ul class="spiffy-whatsnext-list"{{#issuggestions}} data-region="spiffy-whatsnext-suggestions"{{/issuggestions}}>
+    {{#items}}
+    <li class="spiffy-whatsnext-item{{#overdue}} spiffy-whatsnext-item--overdue{{/overdue}}" data-cmid="{{cmid}}">
+        <a href="{{#onpage}}#card-{{cmid}}{{/onpage}}{{^onpage}}{{{url}}}{{/onpage}}" class="spiffy-whatsnext-link"{{#onpage}} data-spiffy-focus="{{cmid}}"{{/onpage}}>{{{name}}}</a>
+        {{#badge}}<span class="badge mds-badge spiffy-status-badge spiffy-status-badge--{{type}}">{{text}}</span>{{/badge}}
+        <span class="spiffy-whatsnext-meta">
+            {{#datetext}}<span class="spiffy-whatsnext-date">{{datetext}}</span>{{/datetext}}
+            {{#sectionname}}<span class="spiffy-whatsnext-section">{{{sectionname}}}</span>{{/sectionname}}
+        </span>
+    </li>
+    {{/items}}
+</ul>

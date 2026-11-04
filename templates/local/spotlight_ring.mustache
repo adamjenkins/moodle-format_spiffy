@@ -1,0 +1,40 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/local/spotlight_ring
+
+    The progress ring of a section or subsection island, with its text ("1 of 3 done") beside it.
+    The ring itself is decoration; the text is what screen readers read. Context: spiffyprogress.
+
+    Example context (json):
+    {
+        "done": 1,
+        "total": 3,
+        "percent": 33,
+        "complete": false,
+        "hasprogress": true,
+        "label": "1 of 3 done"
+    }
+}}
+<div class="spiffy-progress{{#complete}} spiffy-progress--complete{{/complete}}" data-region="spiffy-progress">
+    <svg class="spiffy-ring" viewBox="0 0 36 36" width="36" height="36" aria-hidden="true" focusable="false">
+        <circle class="spiffy-ring-track" cx="18" cy="18" r="15.9155"></circle>
+        <circle class="spiffy-ring-value" cx="18" cy="18" r="15.9155" stroke-dasharray="{{percent}} 100" transform="rotate(-90 18 18)"></circle>
+        {{#complete}}<path class="spiffy-ring-tick" d="M11.5 18.5l4.5 4.5 8.5-9"></path>{{/complete}}
+    </svg>
+    <span class="spiffy-progress-label">{{label}}</span>
+</div>

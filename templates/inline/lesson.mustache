@@ -1,0 +1,86 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/inline/lesson
+
+    One page of a lesson on its card: a content page with its buttons, or a question page with
+    its answer form, after the response to the last answer.
+
+    Example context (json):
+    {
+        "cmid": 9,
+        "pageid": 31,
+        "position": "Page 2 of 4",
+        "title": "Is water wet?",
+        "contents": "<p>Think about how water feels.</p>",
+        "iscontent": false,
+        "buttons": [],
+        "ischoice": true,
+        "options": [
+            {"id": 61, "text": "True"},
+            {"id": 62, "text": "False"}
+        ],
+        "istext": false,
+        "isnumber": false,
+        "hasfeedback": true,
+        "correct": true,
+        "verdict": "Correct.",
+        "response": "<p>That's the correct answer</p>",
+        "attemptsremaining": ""
+    }
+}}
+<div class="spiffy-inline spiffy-lesson">
+    <p class="spiffy-lesson-position small mb-1">{{position}}</p>
+    {{#hasfeedback}}
+        {{> format_spiffy/inline/lesson_feedback }}
+    {{/hasfeedback}}
+    <h4 class="h6 spiffy-lesson-title mb-1">{{{title}}}</h4>
+    <div class="spiffy-lesson-contents">{{{contents}}}</div>
+    {{#iscontent}}
+        <form class="spiffy-lesson-buttons d-flex flex-wrap gap-2 mt-2" data-spiffy-action="continue" data-cmid="{{cmid}}">
+            <input type="hidden" name="pageid" value="{{pageid}}">
+            {{#buttons}}
+                <button type="submit" name="jumpto" value="{{jumpto}}" class="btn mds-btn btn-primary">{{label}}</button>
+            {{/buttons}}
+        </form>
+    {{/iscontent}}
+    {{^iscontent}}
+        <form class="spiffy-lesson-answer mt-2" data-spiffy-action="answer" data-cmid="{{cmid}}">
+            <input type="hidden" name="pageid" value="{{pageid}}">
+            {{#ischoice}}
+                <fieldset>
+                    <legend class="visually-hidden">{{{title}}}</legend>
+                    {{#options}}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="answerid" value="{{id}}" id="spiffy-lesson-{{cmid}}-{{id}}" required>
+                            <label class="form-check-label" for="spiffy-lesson-{{cmid}}-{{id}}">{{{text}}}</label>
+                        </div>
+                    {{/options}}
+                </fieldset>
+            {{/ischoice}}
+            {{#istext}}
+                <label class="form-label" for="spiffy-lesson-{{cmid}}-answer">{{#str}} youranswer, mod_lesson {{/str}}</label>
+                <input class="form-control" type="text" name="answer" id="spiffy-lesson-{{cmid}}-answer" autocomplete="off" required>
+            {{/istext}}
+            {{#isnumber}}
+                <label class="form-label" for="spiffy-lesson-{{cmid}}-answer">{{#str}} youranswer, mod_lesson {{/str}}</label>
+                <input class="form-control spiffy-lesson-number" type="text" inputmode="decimal" name="answer" id="spiffy-lesson-{{cmid}}-answer" autocomplete="off" required>
+            {{/isnumber}}
+            <button type="submit" class="btn mds-btn btn-primary mt-2">{{#str}} submit {{/str}}</button>
+        </form>
+    {{/iscontent}}
+</div>

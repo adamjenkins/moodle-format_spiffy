@@ -1,0 +1,162 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/local/card_teacher
+
+    The teacher parts of a card: the pencil menu (edit actions without editing mode), the
+    needs-attention counts, new questions, confidence results and the quick actions. Context from
+    format_spiffy\local\teacher::export_card(). Part of the section HTML, so no uniqid and no js
+    block: ids are made from the cmid, and format_spiffy/teacher handles the forms from the page root.
+
+    Example context (json):
+    {
+        "cmid": 3,
+        "activityname": "Hand in your plan",
+        "haspanel": true,
+        "hasbadges": true,
+        "badges": [
+            {"label": "3 to grade", "kind": "grading", "url": "#", "hasurl": true},
+            {"label": "12 not finished", "kind": "notfinished", "url": null, "hasurl": false}
+        ],
+        "hasquestions": true,
+        "questionslabel": "2 new questions",
+        "askers": [{"fullname": "Sam Student", "url": "#"}],
+        "hasconfidence": true,
+        "confidence": {
+            "label": "Confidence (9 answers)",
+            "items": [
+                {"face": "😟", "count": 1, "label": "Not confident"},
+                {"face": "😐", "count": 3, "label": "Unsure"},
+                {"face": "😀", "count": 5, "label": "Confident"}
+            ]
+        },
+        "hasactions": true,
+        "actions": [{"url": "#", "label": "Quick grade", "icon": "i/grades"}],
+        "canmessage": true,
+        "notfinished": 12,
+        "messagelabel": "Message to the 12 students who haven't finished",
+        "messagemaxlength": 4000,
+        "hasmenu": true,
+        "menu": {
+            "id": "spiffy-pencil-3",
+            "label": "Edit Hand in your plan",
+            "groups": [
+                {"divider": false, "items": [{"url": "#", "label": "Edit settings", "icon": "i/settings", "danger": false}]},
+                {"divider": true, "items": [{"url": "#", "label": "Delete", "icon": "t/delete", "danger": true}]}
+            ]
+        }
+    }
+}}
+<div class="spiffy-teacher" data-region="spiffy-teacher" data-cmid="{{cmid}}">
+    {{#hasmenu}}
+        {{#menu}}
+        <div class="dropdown spiffy-pencil">
+            <button type="button" class="btn btn-icon spiffy-pencil-toggle" id="{{id}}" data-bs-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false" title="{{label}}">
+                {{#pix}} i/edit, core {{/pix}}<span class="visually-hidden">{{label}}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="{{id}}">
+                {{#groups}}
+                    {{#divider}}<li role="presentation"><hr class="dropdown-divider"></li>{{/divider}}
+                    {{#items}}
+                        <li>
+                            <a class="dropdown-item{{#danger}} text-danger{{/danger}}" href="{{url}}">
+                                {{#pix}}{{icon}}, core{{/pix}}<span>{{label}}</span>
+                            </a>
+                        </li>
+                    {{/items}}
+                {{/groups}}
+            </ul>
+        </div>
+        {{/menu}}
+    {{/hasmenu}}
+    {{#haspanel}}
+    <div class="spiffy-teacher-panel" role="group" aria-labelledby="spiffy-teacher-heading-{{cmid}}">
+        <p class="spiffy-teacher-heading" id="spiffy-teacher-heading-{{cmid}}">
+            {{#pix}} i/permissions, core {{/pix}}<span>{{#str}} teacherpanel, format_spiffy {{/str}}</span>
+        </p>
+        {{#hasbadges}}
+            <ul class="spiffy-teacher-counts list-unstyled">
+                {{#badges}}
+                    <li>
+                        {{#hasurl}}<a href="{{url}}" class="badge mds-badge spiffy-teacher-badge spiffy-teacher-badge--{{kind}}">{{label}}</a>{{/hasurl}}
+                        {{^hasurl}}<span class="badge mds-badge spiffy-teacher-badge spiffy-teacher-badge--{{kind}}">{{label}}</span>{{/hasurl}}
+                    </li>
+                {{/badges}}
+            </ul>
+        {{/hasbadges}}
+        {{#hasquestions}}
+            <div class="spiffy-teacher-questions" data-region="spiffy-teacher-questions">
+                <p class="spiffy-teacher-questions-label">
+                    {{#pix}} t/message, core {{/pix}}<strong>{{questionslabel}}</strong>
+                    <span class="spiffy-teacher-askers">
+                        {{#str}} teacherfrom, format_spiffy {{/str}}
+                        {{#askers}}<a href="{{url}}">{{fullname}}</a> {{/askers}}
+                    </span>
+                </p>
+                <button type="button" class="btn mds-btn mds-btn--size-sm btn-outline-secondary" data-spiffy-teacher-seen="1" data-cmid="{{cmid}}">
+                    {{#str}} teachermarkseen, format_spiffy {{/str}}
+                </button>
+            </div>
+        {{/hasquestions}}
+        {{#hasconfidence}}
+            {{#confidence}}
+            <div class="spiffy-teacher-confidence">
+                <span class="spiffy-teacher-confidence-label">{{label}}</span>
+                <ul class="list-unstyled spiffy-teacher-confidence-list">
+                    {{#items}}
+                        <li><span aria-hidden="true">{{face}}</span> <span class="visually-hidden">{{label}}:</span> {{count}}</li>
+                    {{/items}}
+                </ul>
+            </div>
+            {{/confidence}}
+        {{/hasconfidence}}
+        {{#hasactions}}
+            <div class="spiffy-teacher-actions">
+                {{#actions}}
+                    <a href="{{url}}" class="btn mds-btn mds-btn--size-sm btn-outline-primary">{{#pix}}{{icon}}, core{{/pix}}<span>{{label}}</span></a>
+                {{/actions}}
+            </div>
+        {{/hasactions}}
+        {{#canmessage}}
+            <details class="spiffy-teacher-message">
+                <summary class="btn mds-btn mds-btn--size-sm btn-outline-primary">
+                    {{#pix}} t/email, core {{/pix}}<span>{{#str}} teachermessageunfinished, format_spiffy {{/str}}</span>
+                </summary>
+                <form class="spiffy-teacher-message-form" data-spiffy-teacher="message" data-cmid="{{cmid}}" action="#">
+                    <label for="spiffy-teacher-message-{{cmid}}">{{messagelabel}}</label>
+                    <textarea class="form-control" id="spiffy-teacher-message-{{cmid}}" name="message" rows="3"
+                        maxlength="{{messagemaxlength}}" required></textarea>
+                    <div class="spiffy-teacher-message-actions" data-region="spiffy-teacher-message-actions">
+                        <button type="submit" class="btn mds-btn mds-btn--size-sm btn-primary">{{#str}} teachermessagenext, format_spiffy {{/str}}</button>
+                    </div>
+                    <div class="spiffy-teacher-confirm" data-region="spiffy-teacher-confirm" hidden>
+                        <p tabindex="-1" data-region="spiffy-teacher-confirm-text"></p>
+                        <button type="button" class="btn mds-btn mds-btn--size-sm btn-primary" data-spiffy-teacher-confirm="send">
+                            {{#str}} teachermessagesend, format_spiffy {{/str}}
+                        </button>
+                        <button type="button" class="btn mds-btn mds-btn--size-sm btn-secondary" data-spiffy-teacher-confirm="cancel">
+                            {{#str}} cancel, core {{/str}}
+                        </button>
+                    </div>
+                    <p class="spiffy-teacher-status" data-region="spiffy-teacher-status" role="status" aria-live="polite"></p>
+                </form>
+            </details>
+        {{/canmessage}}
+    </div>
+    {{/haspanel}}
+</div>

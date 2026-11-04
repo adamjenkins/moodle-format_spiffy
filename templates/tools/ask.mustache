@@ -1,0 +1,78 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/tools/ask
+
+    "Ask my teacher" on a card: the teacher's photo and name (or a choice of teachers), the
+    question, and the confirmation step shown by format_spiffy/tools before the question is sent
+    to format_spiffy_ask_teacher as a personal message.
+
+    Example context (json):
+    {
+        "cmid": 3,
+        "activityname": "Learn how to communicate here",
+        "teachers": [
+            {"id": 5, "fullname": "Terry Teacher", "pictureurl": "https://example.com/pic.png", "selected": true},
+            {"id": 6, "fullname": "Tina Tutor", "pictureurl": "https://example.com/pic2.png", "selected": false}
+        ],
+        "teacher": {"id": 5, "fullname": "Terry Teacher", "pictureurl": "https://example.com/pic.png", "selected": true},
+        "multipleteachers": true,
+        "questionmaxlength": 4000
+    }
+}}
+<form class="spiffy-ask" data-spiffy-tool="ask" data-cmid="{{cmid}}">
+    <div class="spiffy-ask-to">
+        {{#teacher}}
+            <img class="spiffy-ask-photo" src="{{pictureurl}}" alt="" width="40" height="40" data-region="spiffy-ask-photo">
+        {{/teacher}}
+        {{#multipleteachers}}
+            <label class="spiffy-ask-label" for="spiffy-ask-teacher-{{cmid}}">{{#str}} asksendto, format_spiffy {{/str}}</label>
+            <select class="form-select form-select-sm spiffy-ask-select" id="spiffy-ask-teacher-{{cmid}}" name="teacherid">
+                {{#teachers}}
+                    <option value="{{id}}" data-pictureurl="{{pictureurl}}"{{#selected}} selected{{/selected}}>{{fullname}}</option>
+                {{/teachers}}
+            </select>
+        {{/multipleteachers}}
+        {{^multipleteachers}}
+            {{#teacher}}
+                <span class="spiffy-ask-name" data-region="spiffy-ask-name">{{#str}} askto, format_spiffy, {{fullname}} {{/str}}</span>
+                <input type="hidden" name="teacherid" value="{{id}}">
+            {{/teacher}}
+        {{/multipleteachers}}
+    </div>
+    <label class="spiffy-ask-label" for="spiffy-ask-{{cmid}}">{{#str}} questionlabel, format_spiffy, {{spiffyplainname}} {{/str}}</label>
+    <textarea class="form-control spiffy-ask-text" id="spiffy-ask-{{cmid}}" name="message" rows="3"
+        maxlength="{{questionmaxlength}}" aria-describedby="spiffy-ask-hint-{{cmid}}"></textarea>
+    <p class="spiffy-ask-hint" id="spiffy-ask-hint-{{cmid}}">{{#str}} questionhint, format_spiffy {{/str}}</p>
+    <div class="spiffy-tool-actions" data-region="spiffy-ask-actions">
+        <button type="submit" class="btn mds-btn btn-primary mds-btn--size-sm spiffy-ask-button">
+            {{#pix}} t/message, core {{/pix}}<span>{{#str}} askteacher, format_spiffy {{/str}}</span>
+        </button>
+    </div>
+    <div class="spiffy-ask-confirm" data-region="spiffy-ask-confirm" hidden>
+        <p class="spiffy-ask-confirm-text" id="spiffy-ask-confirm-{{cmid}}" tabindex="-1">{{#str}} questionconfirm, format_spiffy {{/str}}</p>
+        <div class="spiffy-tool-actions" role="group" aria-labelledby="spiffy-ask-confirm-{{cmid}}">
+            <button type="button" class="btn mds-btn btn-primary mds-btn--size-sm" data-spiffy-tool-confirm="send">
+                {{#pix}} t/sendmessage, core {{/pix}}<span>{{#str}} questionsend, format_spiffy {{/str}}</span>
+            </button>
+            <button type="button" class="btn mds-btn btn-secondary mds-btn--size-sm" data-spiffy-tool-confirm="edit">
+                {{#str}} questionkeepediting, format_spiffy {{/str}}
+            </button>
+        </div>
+    </div>
+    <span class="spiffy-tool-status" data-region="spiffy-tool-status" role="status" aria-live="polite"></span>
+</form>

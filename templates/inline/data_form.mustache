@@ -1,0 +1,93 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/inline/data_form
+
+    The entry form of a simple Database card: one plain control per field.
+
+    Example context (json):
+    {
+        "cmid": 11,
+        "needsapproval": false,
+        "remaining": "You can add 2 more entries.",
+        "maxlength": 10000,
+        "fields": [
+            {"id": 1, "name": "Title", "description": "", "hasdescription": false, "required": true,
+                "istext": true, "isnumber": false, "isurl": false, "istextarea": false, "ismenu": false,
+                "isradio": false, "ischeckbox": false, "isgroup": false, "options": []},
+            {"id": 2, "name": "Rating", "description": "Pick one", "hasdescription": true, "required": false,
+                "istext": false, "isnumber": false, "isurl": false, "istextarea": false, "ismenu": false,
+                "isradio": true, "ischeckbox": false, "isgroup": true,
+                "options": [{"index": 0, "value": "Good", "label": "Good"}, {"index": 1, "value": "Bad", "label": "Bad"}]}
+        ]
+    }
+}}
+<form class="spiffy-data-form" data-spiffy-action="add" data-cmid="{{cmid}}">
+    {{#fields}}
+        <div class="mb-2 spiffy-data-field">
+            {{^isgroup}}
+                <label class="form-label" for="spiffy-data-{{cmid}}-{{id}}">{{{name}}}{{#required}} <span class="spiffy-required">{{#str}} data_required, format_spiffy {{/str}}</span>{{/required}}</label>
+                {{#istext}}
+                    <input type="text" class="form-control" id="spiffy-data-{{cmid}}-{{id}}" name="f{{id}}" maxlength="{{maxlength}}"{{#required}} required{{/required}}{{#hasdescription}} aria-describedby="spiffy-data-{{cmid}}-{{id}}-hint"{{/hasdescription}}>
+                {{/istext}}
+                {{#isnumber}}
+                    <input type="text" inputmode="decimal" class="form-control" id="spiffy-data-{{cmid}}-{{id}}" name="f{{id}}"{{#required}} required{{/required}}{{#hasdescription}} aria-describedby="spiffy-data-{{cmid}}-{{id}}-hint"{{/hasdescription}}>
+                {{/isnumber}}
+                {{#isurl}}
+                    <input type="url" class="form-control" id="spiffy-data-{{cmid}}-{{id}}" name="f{{id}}" placeholder="https://"{{#required}} required{{/required}}{{#hasdescription}} aria-describedby="spiffy-data-{{cmid}}-{{id}}-hint"{{/hasdescription}}>
+                {{/isurl}}
+                {{#istextarea}}
+                    <textarea class="form-control" id="spiffy-data-{{cmid}}-{{id}}" name="f{{id}}" rows="3" maxlength="{{maxlength}}"{{#required}} required{{/required}}{{#hasdescription}} aria-describedby="spiffy-data-{{cmid}}-{{id}}-hint"{{/hasdescription}}></textarea>
+                {{/istextarea}}
+                {{#ismenu}}
+                    <select class="form-select" id="spiffy-data-{{cmid}}-{{id}}" name="f{{id}}"{{#required}} required{{/required}}{{#hasdescription}} aria-describedby="spiffy-data-{{cmid}}-{{id}}-hint"{{/hasdescription}}>
+                        <option value="">{{#str}} peer_choose, format_spiffy {{/str}}</option>
+                        {{#options}}
+                            <option value="{{value}}">{{{label}}}</option>
+                        {{/options}}
+                    </select>
+                {{/ismenu}}
+            {{/isgroup}}
+            {{#isgroup}}
+                <fieldset{{#hasdescription}} aria-describedby="spiffy-data-{{cmid}}-{{id}}-hint"{{/hasdescription}}>
+                    <legend class="form-label fs-6">{{{name}}}{{#required}} <span class="spiffy-required">{{#str}} data_required, format_spiffy {{/str}}</span>{{/required}}</legend>
+                    {{#options}}
+                        <div class="form-check">
+                            {{#isradio}}
+                                <input class="form-check-input" type="radio" name="f{{id}}" value="{{value}}" id="spiffy-data-{{cmid}}-{{id}}-{{index}}"{{#required}} required{{/required}}>
+                            {{/isradio}}
+                            {{#ischeckbox}}
+                                <input class="form-check-input" type="checkbox" name="f{{id}}[]" value="{{value}}" id="spiffy-data-{{cmid}}-{{id}}-{{index}}">
+                            {{/ischeckbox}}
+                            <label class="form-check-label" for="spiffy-data-{{cmid}}-{{id}}-{{index}}">{{{label}}}</label>
+                        </div>
+                    {{/options}}
+                </fieldset>
+            {{/isgroup}}
+            {{#hasdescription}}
+                <p class="form-text" id="spiffy-data-{{cmid}}-{{id}}-hint">{{{description}}}</p>
+            {{/hasdescription}}
+        </div>
+    {{/fields}}
+    {{#needsapproval}}
+        <p class="form-text">{{#str}} data_approvalhint, format_spiffy {{/str}}</p>
+    {{/needsapproval}}
+    {{#remaining}}
+        <p class="form-text">{{remaining}}</p>
+    {{/remaining}}
+    <button type="submit" class="btn mds-btn btn-primary">{{#str}} data_addentry, format_spiffy {{/str}}</button>
+</form>

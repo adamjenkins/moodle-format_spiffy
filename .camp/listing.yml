@@ -1,0 +1,33 @@
+# camp listing manifest: descriptive content for this plugin's page.
+# Schema: https://camp-registry.org/schema/listing.schema.json
+name: format_spiffy
+summary: 'A course format of colourful activity cards: students work inside the card, one step at a time, and teachers see what needs their attention.'
+description: |
+  Spiffy turns each section into a page of colourful activity cards. Students
+  see the step they should do now and can usually do it on the card, with clear
+  hints for what unlocks next. Teachers see what needs their attention on the
+  course page. Every feature has its own on/off switch in the course settings,
+  with site defaults.
+labels:
+  - fully-free
+screenshots:
+  - path: .camp/screenshots/01-spotlight.png
+    caption: "A student's first visit: What's next at the top, the current section open, the others shrunk to bars."
+  - path: .camp/screenshots/02-unlock-chain.png
+    caption: 'Pointing at a locked step draws arrows back through the chain to the step to do first.'
+  - path: .camp/screenshots/03-activities-on-cards.png
+    caption: 'Two cards on stage with Open alongside: a quiz and a feedback form, both answered on the card.'
+  - path: .camp/screenshots/04-confetti.png
+    caption: 'Finishing the last step of a section: confetti from the section, and the ring reads 4 of 4 done.'
+  - path: .camp/screenshots/05-notes-ask-confidence.png
+    caption: 'On every card: a confidence check, private notes, and Ask my teacher with a confirmation.'
+  - path: .camp/screenshots/06-full-list.png
+    caption: 'Show me everything: the full list, with an assignment, glossary, database and book on their cards.'
+  - path: .camp/screenshots/07-teacher-attention.png
+    caption: 'What needs my attention? New questions, work to grade and stuck students, for teachers only.'
+  - path: .camp/screenshots/08-teacher-card.png
+    caption: 'The For teachers panel on a card: counts, questions, Quick grade, Extend the deadline and Message.'
+  - path: .camp/screenshots/09-course-settings.png
+    caption: 'Course settings: layout choices and an on/off switch for each feature.'
+  - path: .camp/screenshots/10-site-defaults.png
+    caption: 'Site administration: the default for every course setting.'

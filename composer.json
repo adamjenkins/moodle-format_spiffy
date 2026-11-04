@@ -1,0 +1,20 @@
+{
+    "name": "adamjenkins/moodle-format_spiffy",
+    "description": "A course format of colourful activity cards: students work inside the card, one step at a time, and teachers see what needs their attention on the course page.",
+    "type": "moodle-format",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Adam Jenkins",
+            "email": "adam@wisecat.net"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/adamjenkins/moodle-format_spiffy/issues",
+        "source": "https://github.com/adamjenkins/moodle-format_spiffy"
+    },
+    "require": {
+        "moodle/moodle": "^5.3",
+        "moodle/composer-installer": "*"
+    }
+}

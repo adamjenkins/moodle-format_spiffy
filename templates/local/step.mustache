@@ -1,0 +1,161 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/local/step
+
+    The inside of one step card (the list item is in format_spiffy/local/spotlight_cards): number,
+    badges and the "Open alongside" button, title, description, the inline interaction or the
+    button, then the core details (dates, completion, restrictions), then the student tools and the
+    teacher parts. The title links to #card-<cmid>, which brings the card to centre stage in
+    spotlight mode; as a small tile the card keeps its title, badges and core details.
+
+    Example context (json):
+    {
+        "cmid": 3,
+        "activityname": "Learn how to communicate here",
+        "url": "#",
+        "spiffynumber": 1,
+        "spiffyicon": {
+            "icon": "../../../pix/help.svg",
+            "iconclass": "",
+            "purpose": "content",
+            "branded": 0,
+            "modname": "page",
+            "pluginname": "Page",
+            "showtooltip": 1
+        },
+        "spiffytitle": "Step 1: Learn how to communicate here",
+        "spiffyheadinglevel": 3,
+        "spiffystate": "available",
+        "spiffydone": false,
+        "spiffyhasinline": false,
+        "spiffystatusbadges": [{"text": "Grade: 8.00 / 10.00", "type": "success"}],
+        "spiffybuttonlabel": "Practise in the forum",
+        "spiffyavailable": true,
+        "spiffylocked": false,
+        "altcontent": "<p>Practise starting conversations.</p>",
+        "dates": {"hasdates": true, "activitydates": [{"label": "Due:", "datestring": "6 April 2027, 6:46 PM"}]},
+        "completion": {
+            "uservisible": true,
+            "isautomatic": true,
+            "istrackeduser": true,
+            "completiondetails": [{"statusincomplete": 1, "description": "Start discussions: 1"}]
+        },
+        "spiffyunlockhint": "Complete this step to unlock Step 2."
+    }
+}}
+<div class="spiffy-card-body">
+    <div class="spiffy-card-head">
+        {{#spiffydone}}
+            <span class="spiffy-step spiffy-step--done">{{#pix}} i/checked, core, {{#str}} done, format_spiffy {{/str}} {{/pix}}</span>
+        {{/spiffydone}}
+        {{^spiffydone}}
+            {{#spiffynumber}}
+                <span class="spiffy-step" aria-hidden="true">{{spiffynumber}}</span>
+            {{/spiffynumber}}
+            {{^spiffynumber}}
+                {{#spiffylocked}}<span class="spiffy-step" aria-hidden="true">{{#pix}} t/locked, core {{/pix}}</span>{{/spiffylocked}}
+            {{/spiffynumber}}
+        {{/spiffydone}}
+        {{#spiffyicon.icon}}
+            {{#spiffyicon}}{{> core_courseformat/local/content/cm/cmicon }}{{/spiffyicon}}
+        {{/spiffyicon.icon}}
+        <div class="spiffy-badges">
+            {{#spiffynumber}}{{#spiffylocked}}<span class="spiffy-lock">{{#pix}} t/locked, core, {{#str}} restricted, format_spiffy {{/str}} {{/pix}}</span>{{/spiffylocked}}{{/spiffynumber}}
+            {{#activitybadge}}{{> core_courseformat/local/content/cm/activitybadge }}{{/activitybadge}}
+            {{> core_courseformat/local/content/cm/badges }}
+            {{#spiffystatusbadges}}
+                <span class="badge mds-badge spiffy-status-badge spiffy-status-badge--{{type}}">{{text}}</span>
+            {{/spiffystatusbadges}}
+            {{#groupmodeinfo}}
+                <div class="activity-groupmode-info" data-region="groupmode">
+                    {{> core_courseformat/local/content/cm/groupmode }}
+                </div>
+            {{/groupmodeinfo}}
+        </div>
+        <button type="button" class="btn mds-btn btn-outline-secondary mds-btn--size-sm spiffy-pin" data-spiffy-pin hidden>
+            <span class="spiffy-pin-add">{{#str}} openalongside, format_spiffy {{/str}}</span>
+            <span class="spiffy-pin-remove">{{#str}} closecard, format_spiffy {{/str}}</span>
+            <span class="visually-hidden">{{{activityname}}}</span>
+        </button>
+    </div>
+    <h{{spiffyheadinglevel}} class="spiffy-card-title"><a href="#card-{{cmid}}" class="spiffy-card-link" data-spiffy-focus="{{cmid}}">{{{spiffytitle}}}</a></h{{spiffyheadinglevel}}>
+    {{#altcontent}}<div class="spiffy-card-summary">{{{altcontent}}}</div>{{/altcontent}}
+    {{#spiffyhasinline}}
+        <div class="spiffy-inline-region" data-region="spiffy-inline">{{{spiffyinlinehtml}}}</div>
+    {{/spiffyhasinline}}
+    <div class="spiffy-card-actions">
+        {{#spiffyavailable}}
+            {{^spiffyhasinline}}
+                <a href="{{{url}}}" class="btn mds-btn spiffy-cm-button{{#spiffydimmed}} btn-secondary spiffy-dimmed{{/spiffydimmed}}{{^spiffydimmed}}{{#spiffydone}} btn-outline-primary{{/spiffydone}}{{^spiffydone}} btn-primary{{/spiffydone}}{{/spiffydimmed}}"{{#spiffyonclick}} onclick="{{{spiffyonclick}}}"{{/spiffyonclick}}>{{{spiffybuttonlabel}}}</a>
+            {{/spiffyhasinline}}
+            {{#spiffyhasinline}}
+                <a href="{{{url}}}" class="spiffy-open-page"{{#spiffyonclick}} onclick="{{{spiffyonclick}}}"{{/spiffyonclick}}>{{#str}} openpage, format_spiffy, {{spiffyplainname}} {{/str}}</a>
+            {{/spiffyhasinline}}
+        {{/spiffyavailable}}
+        {{^spiffyavailable}}
+            <span class="btn mds-btn btn-secondary spiffy-cm-button disabled" aria-disabled="true" tabindex="0"{{#spiffyhinttext}} aria-describedby="spiffy-hinttext-{{cmid}}"{{/spiffyhinttext}}>{{{spiffybuttonlabel}}}</span>
+            {{#spiffyhinttext}}<span class="visually-hidden" id="spiffy-hinttext-{{cmid}}">{{{spiffyhinttext}}}</span>{{/spiffyhinttext}}
+        {{/spiffyavailable}}
+    </div>
+    <div class="spiffy-card-meta" data-region="activity-extras">
+        {{#afterlink}}<div class="spiffy-cm-afterlink">{{{afterlink}}}</div>{{/afterlink}}
+        {{#dates.hasdates}}
+            <div class="spiffy-note spiffy-cm-dates" data-region="activity-dates">
+                {{#dates.activitydates}}
+                    {{> core_course/activity_date }}
+                {{/dates.activitydates}}
+            </div>
+        {{/dates.hasdates}}
+        {{#completion}}
+            {{#uservisible}}
+                {{#isautomatic}}
+                    <ul class="spiffy-note spiffy-cm-completion" aria-label="{{#str}} completionrequirements, core_course, {{spiffyplainname}} {{/str}}">
+                        {{#completiondetails}}
+                            <li class="{{#statuscomplete}}is-complete{{/statuscomplete}}{{#statuscompletefail}}is-failed{{/statuscompletefail}}">
+                                {{#istrackeduser}}
+                                    {{#statuscomplete}}{{#pix}} i/checked, core, {{#str}} completion_automatic:done, core_course {{/str}} {{/pix}}{{/statuscomplete}}
+                                    {{#statuscompletefail}}{{#pix}} i/grade_incorrect, core, {{#str}} completion_automatic:failed, core_course {{/str}} {{/pix}}{{/statuscompletefail}}
+                                    {{#statusincomplete}}<span class="visually-hidden">{{#str}} completion_automatic:todo, core_course {{/str}}</span>{{/statusincomplete}}
+                                {{/istrackeduser}}
+                                {{description}}
+                            </li>
+                        {{/completiondetails}}
+                    </ul>
+                {{/isautomatic}}
+                {{#showmanualcompletion}}
+                    {{! Only for users whose completion is tracked: nothing a teacher or admin cannot click. }}
+                    {{#istrackeduser}}
+                        <div class="spiffy-cm-manual" data-region="activity-information" data-activityname="{{spiffyplainname}}">
+                            {{> core_course/completion_manual }}
+                        </div>
+                    {{/istrackeduser}}
+                {{/showmanualcompletion}}
+            {{/uservisible}}
+        {{/completion}}
+        {{#modavailability}}
+            <div class="spiffy-cm-availability">
+                {{> core_courseformat/local/content/cm/availability }}
+            </div>
+        {{/modavailability}}
+        {{#spiffyunlockhint}}
+            <p class="spiffy-note spiffy-unlock">{{{spiffyunlockhint}}}</p>
+        {{/spiffyunlockhint}}
+    </div>
+    {{#spiffytools}}<div class="spiffy-card-extras">{{> format_spiffy/local/card_tools }}</div>{{/spiffytools}}
+    {{#spiffyteacher}}{{> format_spiffy/local/card_teacher }}{{/spiffyteacher}}
+</div>

@@ -1,0 +1,53 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/inline/lesson_done
+
+    A lesson the user has finished: the response to their last answer, their grade when the
+    gradebook shows it, a review link straight after finishing when the lesson allows it, and a
+    way to start again when retakes are allowed.
+
+    Example context (json):
+    {
+        "cmid": 9,
+        "finished": true,
+        "hasgrade": true,
+        "grade": "Grade: 80.00 / 100.00",
+        "hasreview": true,
+        "reviewurl": "https://example.com/mod/lesson/view.php?id=9&pageid=31",
+        "canstart": true,
+        "startlabel": "Try again",
+        "hasfeedback": false
+    }
+}}
+<div class="spiffy-inline spiffy-done-view spiffy-lesson-done">
+    {{#hasfeedback}}
+        {{> format_spiffy/inline/lesson_feedback }}
+    {{/hasfeedback}}
+    {{#finished}}
+        <p class="spiffy-done-answer mb-1">{{#str}} lessonfinished, format_spiffy {{/str}}</p>
+    {{/finished}}
+    {{#hasgrade}}
+        <p class="mb-2"><span class="badge mds-badge bg-success">{{grade}}</span></p>
+    {{/hasgrade}}
+    {{#hasreview}}
+        <a class="btn mds-btn btn-outline-primary me-2" href="{{reviewurl}}">{{#str}} reviewlesson, mod_lesson {{/str}}</a>
+    {{/hasreview}}
+    {{#canstart}}
+        <button type="button" class="btn mds-btn btn-outline-primary spiffy-inline-undo" data-spiffy-action="start" data-cmid="{{cmid}}">{{startlabel}}</button>
+    {{/canstart}}
+</div>

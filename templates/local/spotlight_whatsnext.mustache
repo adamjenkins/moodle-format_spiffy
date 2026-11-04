@@ -1,0 +1,52 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/local/spotlight_whatsnext
+
+    "What's next", for the whole course: open activities due soon or overdue, then unfinished ones,
+    then suggestions, so that a student notices what is there. Items for this page link to their
+    card (#card-<cmid>), which spotlight mode puts on stage. The page script hides an item when its
+    card here is done. Context: the whatsnext part of format_spiffy\\local\\spotlight::export_page().
+
+    Example context (json):
+    {
+        "courseid": 2,
+        "hasitems": true,
+        "more": "",
+        "total": 2,
+        "main": {"items": [
+            {"cmid": 3, "name": "Write your introduction", "onpage": true, "url": "#card-3", "sectionname": "Week 1",
+             "datetext": "Due: Friday", "badge": {"text": "Due soon", "type": "warning"}, "overdue": false}
+        ]},
+        "suggestions": {"issuggestions": true, "items": [
+            {"cmid": 4, "name": "Read the guide", "onpage": true, "url": "#card-4", "sectionname": "Week 1",
+             "datetext": "", "badge": false, "overdue": false}
+        ]}
+    }
+}}
+<section class="spiffy-whatsnext" data-region="spiffy-whatsnext" aria-labelledby="spiffy-whatsnext-title-{{courseid}}">
+    <h2 class="spiffy-whatsnext-title" id="spiffy-whatsnext-title-{{courseid}}">{{#str}} whatsnext, format_spiffy {{/str}}</h2>
+    {{#main}}
+        {{> format_spiffy/local/spotlight_whatsnext_list }}
+    {{/main}}
+    {{#more}}<p class="spiffy-whatsnext-more" data-region="spiffy-whatsnext-more">{{more}}</p>{{/more}}
+    {{#suggestions}}
+        <h3 class="spiffy-whatsnext-subtitle">{{#str}} whatsnextsuggest, format_spiffy {{/str}}</h3>
+        {{> format_spiffy/local/spotlight_whatsnext_list }}
+    {{/suggestions}}
+    <p class="spiffy-whatsnext-empty" data-region="spiffy-whatsnext-empty"{{#hasitems}} hidden{{/hasitems}}>{{#str}} whatsnextnone, format_spiffy {{/str}}</p>
+</section>

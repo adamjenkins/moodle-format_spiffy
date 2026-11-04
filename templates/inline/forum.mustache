@@ -1,0 +1,77 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/inline/forum
+
+    A simple forum discussion on its card: the opening post, the latest replies and a reply box.
+    The same view is used before and after the activity is done, so the forum stays interactive.
+
+    Example context (json):
+    {
+        "cmid": 7,
+        "done": false,
+        "first": {
+            "id": 1, "author": "Ms Teacher", "picture": "", "time": "1/11/26, 09:00",
+            "isotime": "2026-11-01T09:00:00+00:00", "subject": "Introduce yourself", "showsubject": false,
+            "message": "<p>Tell us one thing about you.</p>", "private": false
+        },
+        "replies": [
+            {
+                "id": 2, "author": "Sam Student", "picture": "", "time": "2/11/26, 10:15",
+                "isotime": "2026-11-02T10:15:00+00:00", "subject": "Re: Introduce yourself", "showsubject": false,
+                "message": "<p>I play the cello.</p>", "private": false
+            }
+        ],
+        "hasreplies": true,
+        "replycount": 5,
+        "hasmore": true,
+        "discussionurl": "https://example.com/mod/forum/discuss.php?d=1",
+        "canreply": true,
+        "closed": "",
+        "maxlength": 10000
+    }
+}}
+<div class="spiffy-inline spiffy-forum{{#done}} spiffy-done-view{{/done}}">
+    {{#first}}
+        {{> format_spiffy/inline/forum_post }}
+    {{/first}}
+    <div class="spiffy-forum-replies">
+        {{#hasmore}}
+            <a class="spiffy-forum-all" href="{{discussionurl}}">{{#str}} forum_showall, format_spiffy, {{replycount}} {{/str}}</a>
+        {{/hasmore}}
+        {{#hasreplies}}
+            <ol class="list-unstyled spiffy-forum-list" aria-label="{{#str}} forum_latestreplies, format_spiffy {{/str}}">
+                {{#replies}}
+                    <li>{{> format_spiffy/inline/forum_post }}</li>
+                {{/replies}}
+            </ol>
+        {{/hasreplies}}
+        {{^hasreplies}}
+            <p class="spiffy-forum-empty">{{#str}} forum_noreplies, format_spiffy {{/str}}</p>
+        {{/hasreplies}}
+    </div>
+    {{#canreply}}
+        <form class="spiffy-forum-reply" data-spiffy-action="reply" data-cmid="{{cmid}}">
+            <label class="form-label" for="spiffy-forum-reply-{{cmid}}">{{#str}} forum_yourreply, format_spiffy {{/str}}</label>
+            <textarea class="form-control" id="spiffy-forum-reply-{{cmid}}" name="message" rows="3" maxlength="{{maxlength}}" required></textarea>
+            <button type="submit" class="btn mds-btn btn-primary mt-2">{{#str}} forum_postreply, format_spiffy {{/str}}</button>
+        </form>
+    {{/canreply}}
+    {{^canreply}}
+        <p class="spiffy-forum-closed">{{closed}}</p>
+    {{/canreply}}
+</div>

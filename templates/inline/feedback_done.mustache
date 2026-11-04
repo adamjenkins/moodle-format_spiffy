@@ -1,0 +1,74 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/inline/feedback_done
+
+    A feedback the user has answered: thanks, the feedback's own "after submit" text, their answer
+    (not for anonymous feedback), the results when the feedback shows them to students, and the
+    form again when several submissions are allowed.
+
+    Example context (json):
+    {
+        "cmid": 7,
+        "pageaftersubmit": "<p>See you next week.</p>",
+        "hasanswer": true,
+        "answer": "Very useful",
+        "showresults": true,
+        "hasoptions": true,
+        "options": [
+            {"text": "Very useful", "mine": true, "count": 3, "percent": 75},
+            {"text": "Not much", "mine": false, "count": 1, "percent": 25}
+        ],
+        "summary": "",
+        "resultsurl": "https://example.com/mod/feedback/analysis.php?id=7",
+        "again": null
+    }
+}}
+<div class="spiffy-inline spiffy-done-view spiffy-feedback-done">
+    <p class="spiffy-done-thanks">{{#str}} feedbackthanks, format_spiffy {{/str}}</p>
+    {{#pageaftersubmit}}
+        <div class="spiffy-feedback-aftersubmit">{{{pageaftersubmit}}}</div>
+    {{/pageaftersubmit}}
+    {{#hasanswer}}
+        <p class="spiffy-done-answer">{{#str}} youranswer, format_spiffy {{/str}} <strong class="spiffy-feedback-answer">{{answer}}</strong></p>
+    {{/hasanswer}}
+    {{#showresults}}
+        {{#hasoptions}}
+            <ul class="spiffy-results" aria-label="{{#str}} results, format_spiffy {{/str}}">
+                {{#options}}
+                    <li class="spiffy-result{{#mine}} is-mine{{/mine}}">
+                        <span class="spiffy-result-label">{{{text}}}</span>
+                        <span class="spiffy-result-bar" aria-hidden="true"><span style="width: {{percent}}%"></span></span>
+                        <span class="spiffy-result-count">{{#str}} votes, format_spiffy, {"count": {{count}}, "percent": {{percent}} } {{/str}}</span>
+                    </li>
+                {{/options}}
+            </ul>
+        {{/hasoptions}}
+        {{#summary}}
+            <p class="spiffy-feedback-summary">{{summary}}</p>
+        {{/summary}}
+        {{#resultsurl}}
+            <a class="spiffy-feedback-resultslink" href="{{resultsurl}}">{{#str}} feedbackallresults, format_spiffy {{/str}}</a>
+        {{/resultsurl}}
+    {{/showresults}}
+    {{#again}}
+        <details class="spiffy-inline-again">
+            <summary class="btn mds-btn btn-outline-primary">{{#str}} feedbackansweragain, format_spiffy {{/str}}</summary>
+            {{> format_spiffy/inline/feedback }}
+        </details>
+    {{/again}}
+</div>

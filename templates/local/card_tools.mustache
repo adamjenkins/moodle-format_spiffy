@@ -1,0 +1,71 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/local/card_tools
+
+    The student tools on a card: the confidence check (done cards only), "My notes" and
+    "Ask my teacher", each shown only when its course setting is on (cannote, canask, showconfidence).
+    Context from format_spiffy\local\tools::export_card(). Part of the section
+    HTML, so no uniqid and no js block: ids are made from the cmid, and format_spiffy/tools
+    handles the forms from the page root.
+
+    Example context (json):
+    {
+        "cmid": 3,
+        "cannote": true,
+        "activityname": "Learn how to communicate here",
+        "note": "Ask about the second question.",
+        "hasnote": true,
+        "notemaxlength": 10000,
+        "canask": true,
+        "teachers": [
+            {"id": 5, "fullname": "Terry Teacher", "pictureurl": "https://example.com/pic.png", "selected": true},
+            {"id": 6, "fullname": "Tina Tutor", "pictureurl": "https://example.com/pic2.png", "selected": false}
+        ],
+        "teacher": {"id": 5, "fullname": "Terry Teacher", "pictureurl": "https://example.com/pic.png", "selected": true},
+        "multipleteachers": true,
+        "questionmaxlength": 4000,
+        "showconfidence": true,
+        "confidence": [
+            {"value": 1, "face": "😟", "label": "Not confident", "pressed": false},
+            {"value": 2, "face": "😐", "label": "Unsure", "pressed": true},
+            {"value": 3, "face": "😀", "label": "Confident", "pressed": false}
+        ],
+        "hasconfidence": true
+    }
+}}
+<div class="spiffy-tools" data-region="spiffy-tools" data-cmid="{{cmid}}">
+    {{#showconfidence}}{{> format_spiffy/tools/confidence }}{{/showconfidence}}
+    <div class="spiffy-tools-bar">
+        {{#cannote}}
+        <details class="spiffy-tool spiffy-tool--note"{{#hasnote}} open{{/hasnote}}>
+            <summary class="spiffy-tool-toggle spiffy-tool-toggle--note">
+                {{#pix}} i/marker, core {{/pix}}<span>{{#str}} mynotes, format_spiffy {{/str}}</span>
+            </summary>
+            {{> format_spiffy/tools/note }}
+        </details>
+        {{/cannote}}
+        {{#canask}}
+            <details class="spiffy-tool spiffy-tool--ask">
+                <summary class="spiffy-tool-toggle spiffy-tool-toggle--ask">
+                    {{#pix}} t/message, core {{/pix}}<span>{{#str}} askteacher, format_spiffy {{/str}}</span>
+                </summary>
+                {{> format_spiffy/tools/ask }}
+            </details>
+        {{/canask}}
+    </div>
+</div>

@@ -1,0 +1,68 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/inline/assign_done
+
+    An assignment the user has submitted: their text and its status, the grade and the feedback
+    comments once they are released, and an edit box while the assignment still allows changes.
+
+    Example context (json):
+    {
+        "cmid": 7,
+        "name": "Short reflection",
+        "status": "Submitted 2/11/26, 14:05",
+        "hastext": true,
+        "submittedtext": "<p>My first thoughts are…</p>",
+        "hasgrade": true,
+        "grade": "Grade: 8.00 / 10.00",
+        "hasfeedback": true,
+        "feedback": "<p>Well argued.</p>",
+        "canedit": true,
+        "text": "My first thoughts are…",
+        "drafts": false,
+        "draftnotice": "",
+        "haswordlimit": false,
+        "wordlimit": 0,
+        "hasstatement": false,
+        "statement": "",
+        "statementrequired": false
+    }
+}}
+<div class="spiffy-inline spiffy-done-view spiffy-assign-done">
+    {{#status}}
+        <p class="spiffy-assign-status small mb-2">{{status}}</p>
+    {{/status}}
+    {{#hastext}}
+        <p class="spiffy-done-answer mb-1">{{#str}} youranswer, format_spiffy {{/str}}</p>
+        <div class="spiffy-assign-answer">{{{submittedtext}}}</div>
+    {{/hastext}}
+    {{#hasgrade}}
+        <p class="spiffy-assign-grade mt-2 mb-0"><span class="badge mds-badge bg-success">{{grade}}</span></p>
+    {{/hasgrade}}
+    {{#hasfeedback}}
+        <section class="spiffy-assign-feedback mt-2" aria-labelledby="spiffy-assign-{{cmid}}-feedback">
+            <h4 class="h6 mb-1" id="spiffy-assign-{{cmid}}-feedback">{{#str}} feedback, mod_assign {{/str}}</h4>
+            {{{feedback}}}
+        </section>
+    {{/hasfeedback}}
+    {{#canedit}}
+        <details class="spiffy-assign-edit mt-2">
+            <summary class="spiffy-assign-edit-toggle">{{#str}} assignedit, format_spiffy {{/str}}</summary>
+            {{> format_spiffy/inline/assign_form }}
+        </details>
+    {{/canedit}}
+</div>

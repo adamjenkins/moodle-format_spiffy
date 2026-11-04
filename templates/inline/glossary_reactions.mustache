@@ -1,0 +1,93 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/inline/glossary_reactions
+
+    Peer reactions on a classmate's Glossary or Database entry: the rating summary and a rating
+    form when the activity uses ratings, and the latest comments with a comment box when
+    comments are on. Used inside format_spiffy/inline/glossary_peer, whose context has the entry id.
+
+    Example context (json):
+    {
+        "cmid": 9,
+        "id": 31,
+        "url": "https://example.com/mod/glossary/showentry.php?eid=31",
+        "rating": {
+            "canrate": true,
+            "hassummary": true,
+            "summary": "Average 4 (2 ratings)",
+            "scale": [{"value": 5, "label": "5", "selected": false}, {"value": 4, "label": "4", "selected": true}]
+        },
+        "comments": {
+            "count": 3,
+            "hascomments": true,
+            "more": true,
+            "canpost": true,
+            "maxlength": 10000,
+            "list": [{"author": "Ana Peer", "time": "2/11/26, 11:00", "isotime": "2026-11-02T11:00:00+00:00",
+                "content": "<p>Nice example.</p>"}]
+        }
+    }
+}}
+<div class="spiffy-reactions">
+    {{#rating}}
+        <div class="spiffy-reactions-rating">
+            {{#hassummary}}
+                <span class="badge mds-badge text-bg-light spiffy-rating-summary">{{summary}}</span>
+            {{/hassummary}}
+            {{#canrate}}
+                <form class="spiffy-rate" data-spiffy-action="rate" data-cmid="{{cmid}}">
+                    <input type="hidden" name="itemid" value="{{id}}">
+                    <label class="form-label mb-0" for="spiffy-rate-{{cmid}}-{{id}}">{{#str}} peer_yourrating, format_spiffy {{/str}}</label>
+                    <select class="form-select form-select-sm" id="spiffy-rate-{{cmid}}-{{id}}" name="rating" required>
+                        <option value="">{{#str}} peer_choose, format_spiffy {{/str}}</option>
+                        {{#scale}}
+                            <option value="{{value}}"{{#selected}} selected{{/selected}}>{{{label}}}</option>
+                        {{/scale}}
+                    </select>
+                    <button type="submit" class="btn mds-btn btn-outline-primary mds-btn--size-sm">{{#str}} peer_rate, format_spiffy {{/str}}</button>
+                </form>
+            {{/canrate}}
+        </div>
+    {{/rating}}
+    {{#comments}}
+        <div class="spiffy-reactions-comments">
+            {{#hascomments}}
+                <ul class="list-unstyled spiffy-comments" aria-label="{{#str}} peer_comments, format_spiffy {{/str}}">
+                    {{#list}}
+                        <li class="spiffy-comment">
+                            <span class="spiffy-comment-author">{{author}}</span>
+                            <time class="spiffy-comment-time" datetime="{{isotime}}">{{time}}</time>
+                            <div class="spiffy-comment-text">{{{content}}}</div>
+                        </li>
+                    {{/list}}
+                </ul>
+            {{/hascomments}}
+            {{#more}}
+                <a class="spiffy-comments-all" href="{{url}}">{{#str}} peer_allcomments, format_spiffy, {{count}} {{/str}}</a>
+            {{/more}}
+            {{#canpost}}
+                <form class="spiffy-comment-form" data-spiffy-action="comment" data-cmid="{{cmid}}">
+                    <input type="hidden" name="itemid" value="{{id}}">
+                    <label class="form-label" for="spiffy-comment-{{cmid}}-{{id}}">{{#str}} peer_yourcomment, format_spiffy {{/str}}</label>
+                    <textarea class="form-control form-control-sm" id="spiffy-comment-{{cmid}}-{{id}}" name="content" rows="2" maxlength="{{maxlength}}" required></textarea>
+                    <button type="submit" class="btn mds-btn btn-outline-secondary mds-btn--size-sm mt-1">{{#str}} peer_postcomment, format_spiffy {{/str}}</button>
+                </form>
+            {{/canpost}}
+        </div>
+    {{/comments}}
+</div>

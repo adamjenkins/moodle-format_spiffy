@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<libraries>
+  <library>
+    <location>amd/src/local/canvas_confetti.js</location>
+    <name>canvas-confetti</name>
+    <description>Confetti on a canvas, for the celebration when a student finishes a section.</description>
+    <version>1.9.4</version>
+    <license>ISC</license>
+    <repository>https://github.com/catdad/canvas-confetti</repository>
+    <copyrights>
+      <copyright>2020 Kiril Vatev</copyright>
+    </copyrights>
+    <upgradable>true</upgradable>
+  </library>
+</libraries>
