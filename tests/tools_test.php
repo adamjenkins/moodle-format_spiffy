@@ -98,6 +98,16 @@ final class tools_test extends advanced_testcase {
     }
 
     /**
+     * A real renderer: $OUTPUT is only a stand-in until something has used the page.
+     *
+     * @return \renderer_base
+     */
+    private function renderer(): \renderer_base {
+        global $PAGE;
+        return $PAGE->get_renderer('core');
+    }
+
+    /**
      * The choice as the given user sees it.
      *
      * @param \stdClass $user
@@ -121,11 +131,10 @@ final class tools_test extends advanced_testcase {
      * A student gets notes and "Ask my teacher" on an open card, and the confidence check once it is done.
      */
     public function test_export_card_for_student(): void {
-        global $OUTPUT;
         $this->create_course();
         $this->setUser($this->student);
 
-        $context = tools::export_card($this->cm($this->student), handler::STATE_AVAILABLE, $OUTPUT);
+        $context = tools::export_card($this->cm($this->student), handler::STATE_AVAILABLE, $this->renderer());
         $this->assertSame((int)$this->choice->cmid, $context['cmid']);
         $this->assertFalse($context['hasnote']);
         $this->assertTrue($context['canask']);
@@ -135,14 +144,14 @@ final class tools_test extends advanced_testcase {
         $this->assertNotEmpty($context['teacher']['pictureurl']);
         $this->assertFalse($context['showconfidence']);
 
-        $context = tools::export_card($this->cm($this->student), handler::STATE_DONE, $OUTPUT);
+        $context = tools::export_card($this->cm($this->student), handler::STATE_DONE, $this->renderer());
         $this->assertTrue($context['showconfidence']);
         $this->assertSame([1, 2, 3], array_column($context['confidence'], 'value'));
         $this->assertSame([false, false, false], array_column($context['confidence'], 'pressed'));
 
-        $this->assertSame([], tools::export_card($this->cm($this->student), handler::STATE_LOCKED, $OUTPUT));
+        $this->assertSame([], tools::export_card($this->cm($this->student), handler::STATE_LOCKED, $this->renderer()));
 
-        $html = $OUTPUT->render_from_template('format_spiffy/local/card_tools', $context);
+        $html = $this->renderer()->render_from_template('format_spiffy/local/card_tools', $context);
         $this->assertStringContainsString('Save to my notes', $html);
         $this->assertStringContainsString('Ask my teacher', $html);
         $this->assertStringContainsString('Only you can see this', $html);
@@ -153,28 +162,27 @@ final class tools_test extends advanced_testcase {
      * Teachers, guests and users who are not enrolled get no student tools.
      */
     public function test_export_card_empty_for_others(): void {
-        global $OUTPUT;
         $this->create_course();
         $outsider = $this->getDataGenerator()->create_user();
 
         $this->setUser($this->teacher);
-        $this->assertSame([], tools::export_card($this->cm($this->teacher), handler::STATE_AVAILABLE, $OUTPUT));
+        $this->assertSame([], tools::export_card($this->cm($this->teacher), handler::STATE_AVAILABLE, $this->renderer()));
 
         $this->setAdminUser();
-        $this->assertSame([], tools::export_card($this->cm(get_admin()), handler::STATE_AVAILABLE, $OUTPUT));
+        $this->assertSame([], tools::export_card($this->cm(get_admin()), handler::STATE_AVAILABLE, $this->renderer()));
 
         $this->setUser($outsider);
-        $this->assertSame([], tools::export_card($this->cm($outsider), handler::STATE_AVAILABLE, $OUTPUT));
+        $this->assertSame([], tools::export_card($this->cm($outsider), handler::STATE_AVAILABLE, $this->renderer()));
 
         $this->setGuestUser();
-        $this->assertSame([], tools::export_card($this->cm(guest_user()), handler::STATE_AVAILABLE, $OUTPUT));
+        $this->assertSame([], tools::export_card($this->cm(guest_user()), handler::STATE_AVAILABLE, $this->renderer()));
     }
 
     /**
      * Notes are saved, shown on the card, replaced, removed when emptied and limited in length.
      */
     public function test_save_note(): void {
-        global $DB, $OUTPUT;
+        global $DB;
         $this->create_course();
         $this->setUser($this->student);
 
@@ -192,7 +200,7 @@ final class tools_test extends advanced_testcase {
         $this->assertSame(1, $DB->count_records('format_spiffy_note', ['userid' => $this->student->id]));
 
         tools::reset_caches();
-        $context = tools::export_card($this->cm($this->student), handler::STATE_AVAILABLE, $OUTPUT);
+        $context = tools::export_card($this->cm($this->student), handler::STATE_AVAILABLE, $this->renderer());
         $this->assertTrue($context['hasnote']);
         $this->assertSame('Changed', $context['note']);
 
@@ -308,7 +316,6 @@ final class tools_test extends advanced_testcase {
      * who see all groups and belong to none.
      */
     public function test_teachers_in_separate_groups(): void {
-        global $OUTPUT;
         $generator = $this->getDataGenerator();
         $this->create_course(['groupmode' => SEPARATEGROUPS, 'groupmodeforce' => 1]);
         $other = $generator->create_user(['firstname' => 'Olga', 'lastname' => 'Other']);
@@ -325,7 +332,7 @@ final class tools_test extends advanced_testcase {
         $teachers = tools::get_teachers($this->cm($this->student));
         $this->assertEqualsCanonicalizing([(int)$this->teacher->id, (int)$head->id], array_keys($teachers));
 
-        $context = tools::export_card($this->cm($this->student), handler::STATE_AVAILABLE, $OUTPUT);
+        $context = tools::export_card($this->cm($this->student), handler::STATE_AVAILABLE, $this->renderer());
         $this->assertTrue($context['multipleteachers']);
 
         $this->expectException(\moodle_exception::class);

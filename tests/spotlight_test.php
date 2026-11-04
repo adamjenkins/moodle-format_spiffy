@@ -333,6 +333,8 @@ final class spotlight_test extends advanced_testcase {
      */
     public function test_whats_next_never_empty(): void {
         $this->resetAfterTest();
+        // The log store waits for the transaction to end, and PostgreSQL tests run inside one.
+        $this->preventResetByRollback();
         $course = $this->create_course();
         $untracked = ['completion' => COMPLETION_TRACKING_NONE];
         $opened = $this->create_step($course, 1, 'Opened', $untracked);

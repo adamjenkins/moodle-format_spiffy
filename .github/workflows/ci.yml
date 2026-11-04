@@ -113,7 +113,8 @@ jobs:
         # ever pass against the toolchain the committed bundles were built with.
         # The bundles in this repository are built with the MOODLE_503_STABLE toolchain.
         if: ${{ !cancelled() && matrix.moodle-branch == 'MOODLE_503_STABLE' }}
-        run: moodle-plugin-ci grunt --max-lint-warnings 0
+        # One warning is allowed: ESLint reports amd/src/local/canvas_confetti.js (thirdparty) as ignored.
+        run: moodle-plugin-ci grunt --max-lint-warnings 1
 
       - name: PHPUnit tests
         if: ${{ !cancelled() }}

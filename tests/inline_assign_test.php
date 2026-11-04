@@ -104,7 +104,11 @@ final class inline_assign_test extends advanced_testcase {
      * File submissions, team submissions and time limits open the assignment page instead.
      */
     public function test_not_inline_for_other_settings(): void {
-        [$course, $files, $student] = $this->setup_assign(['assignsubmission_file_enabled' => 1]);
+        [$course, $files, $student] = $this->setup_assign([
+            'assignsubmission_file_enabled' => 1,
+            'assignsubmission_file_maxfiles' => 1,
+            'assignsubmission_file_maxsizebytes' => 0,
+        ]);
         $team = $this->getDataGenerator()->create_module('assign', [
             'course' => $course->id,
             'assignsubmission_onlinetext_enabled' => 1,

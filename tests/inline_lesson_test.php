@@ -156,8 +156,18 @@ final class inline_lesson_test extends advanced_testcase {
 
         $html = $this->render($course, $lesson->cmid);
         $this->assertStringContainsString('Welcome page', $html);
-        $this->assertNull($this->handler($course, $lesson->cmid)
-            ->process_action('continue', ['pageid' => (string)$content->id, 'jumpto' => (string)LESSON_NEXTPAGE]));
+        // Core's process_page reads attemptsremaining, which it never sets after a jump from a content
+        // page (mod/lesson/locallib.php add_messages_on_page_process()). PHPUnit would count that warning.
+        set_error_handler(
+            fn(int $errno, string $message): bool => str_contains($message, 'attemptsremaining'),
+            E_WARNING
+        );
+        try {
+            $this->assertNull($this->handler($course, $lesson->cmid)
+                ->process_action('continue', ['pageid' => (string)$content->id, 'jumpto' => (string)LESSON_NEXTPAGE]));
+        } finally {
+            restore_error_handler();
+        }
         $this->assertTrue($DB->record_exists('lesson_branch', ['lessonid' => $lesson->id, 'userid' => $student->id,
             'pageid' => $content->id]));
 
