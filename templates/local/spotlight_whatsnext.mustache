@@ -49,4 +49,5 @@
         {{> format_spiffy/local/spotlight_whatsnext_list }}
     {{/suggestions}}
     <p class="spiffy-whatsnext-empty" data-region="spiffy-whatsnext-empty"{{#hasitems}} hidden{{/hasitems}}>{{#str}} whatsnextnone, format_spiffy {{/str}}</p>
+    {{#recent}}{{> format_spiffy/local/recent }}{{/recent}}
 </section>

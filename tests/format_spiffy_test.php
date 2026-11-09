@@ -555,7 +555,8 @@ final class format_spiffy_test extends advanced_testcase {
     }
 
     /**
-     * A course reset that clears completion or unenrols clears the rows, and only then; settings stay.
+     * A course reset that clears completion or unenrols clears the rows and Recently viewed, and only
+     * then; settings stay.
      */
     public function test_course_reset_clears_rows(): void {
         global $DB;
@@ -568,17 +569,37 @@ final class format_spiffy_test extends advanced_testcase {
         $student = $generator->create_and_enrol($course, 'student');
         $teacher = $generator->create_and_enrol($course, 'editingteacher');
         $this->add_rows($course, $page->cmid, $student->id, $teacher->id);
+        $recent = \format_spiffy\local\recent::PREFERENCE . $course->id;
+        set_user_preference($recent, '{}', $student);
 
         reset_course_userdata((object)['id' => $course->id, 'courseid' => $course->id, 'reset_events' => 1,
             'reset_start_date_old' => $course->startdate]);
         $this->assertSame(1, $DB->count_records('format_spiffy_note', ['courseid' => $course->id]));
+        $this->assertTrue($DB->record_exists('user_preferences', ['name' => $recent]));
 
         reset_course_userdata((object)['id' => $course->id, 'courseid' => $course->id, 'reset_completion' => 1,
             'reset_start_date_old' => $course->startdate]);
         foreach (['note', 'confidence', 'question'] as $table) {
             $this->assertSame(0, $DB->count_records("format_spiffy_$table", ['courseid' => $course->id]));
         }
+        $this->assertFalse($DB->record_exists('user_preferences', ['name' => $recent]));
         $this->assertSame(1, $DB->count_records('format_spiffy_cm', ['courseid' => $course->id]));
+    }
+
+    /**
+     * Uninstalling removes the format's user preferences, and only those.
+     */
+    public function test_uninstall_removes_preferences(): void {
+        global $CFG, $DB;
+        require_once($CFG->dirroot . '/course/format/spiffy/db/uninstall.php');
+        $this->resetAfterTest();
+        $user = $this->getDataGenerator()->create_user();
+        set_user_preference('format_spiffy_viewmode', 'list', $user);
+        set_user_preference(\format_spiffy\local\recent::PREFERENCE . '5', '{}', $user);
+        set_user_preference('formatXspiffy_other', 'keep', $user);
+        $this->assertTrue(xmldb_format_spiffy_uninstall());
+        $names = $DB->get_fieldset_select('user_preferences', 'name', 'userid = ?', [$user->id]);
+        $this->assertSame(['formatXspiffy_other'], array_values($names));
     }
 
     /**

@@ -97,15 +97,24 @@ class spotlight {
         if ($whatsnext && !$whatsnext['hasitems']) {
             $whatsnext = false;
         }
+        // The recent links go inside the block that is showing, or else stand alone in the toolbar.
+        $inteacherblock = !is_role_switched($format->get_courseid()) && !$format->show_editor()
+            && teacher::is_teacher($context) && $format->feature_enabled('teachertools');
+        $recent = $inteacherblock ? false : recent::export($format);
+        if ($whatsnext) {
+            $whatsnext['recent'] = $recent;
+            $recent = false;
+        }
         return [
             'courseid' => (int)$format->get_courseid(),
             'viewmode' => $mode,
             'canswitch' => $canswitch,
-            'hastoolbar' => $canswitch || $whatsnext,
+            'hastoolbar' => $canswitch || $whatsnext || $recent,
             'isspotlight' => $mode === self::MODE_SPOTLIGHT,
             'islist' => $mode === self::MODE_LIST,
             'stage' => implode(' ', self::get_stage($steps)),
             'whatsnext' => $whatsnext,
+            'recent' => $recent,
         ];
     }
 

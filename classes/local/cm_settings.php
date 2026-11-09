@@ -152,8 +152,8 @@ class cm_settings {
     }
 
     /**
-     * Clear students' notes, confidence answers and the question log when a course reset clears
-     * completion or unenrols users. Core has no reset hook for course formats.
+     * Clear students' notes, confidence answers, the question log and everyone's "Recently viewed"
+     * when a course reset clears completion or unenrols users. Core has no reset hook for course formats.
      *
      * @param \core\event\course_reset_ended $event
      * @return void
@@ -167,6 +167,7 @@ class cm_settings {
         foreach (array_diff(self::CM_TABLES, [self::TABLE]) as $table) {
             $DB->delete_records($table, ['courseid' => $event->courseid]);
         }
+        $DB->delete_records('user_preferences', ['name' => recent::PREFERENCE . $event->courseid]);
     }
 
     /**
@@ -209,5 +210,6 @@ class cm_settings {
         foreach (self::CM_TABLES as $table) {
             $DB->delete_records($table, ['courseid' => $event->objectid]);
         }
+        $DB->delete_records('user_preferences', ['name' => recent::PREFERENCE . $event->objectid]);
     }
 }

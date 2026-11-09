@@ -115,7 +115,7 @@ final class privacy_provider_test extends provider_testcase {
         $names = array_map(fn($item) => $item->get_name(), $collection->get_collection());
         foreach (
             ['format_spiffy_note', 'format_spiffy_confidence', 'format_spiffy_question', 'core_message',
-                'format_spiffy_viewmode'] as $name
+                'format_spiffy_viewmode', 'format_spiffy_recent'] as $name
         ) {
             $this->assertContains($name, $names);
         }
@@ -172,9 +172,11 @@ final class privacy_provider_test extends provider_testcase {
      */
     public function test_export_user_preferences(): void {
         set_user_preference('format_spiffy_viewmode', 'list', $this->student->id);
+        set_user_preference('format_spiffy_recent_7', '{"12":1000}', $this->student->id);
         provider::export_user_preferences($this->student->id);
         $prefs = writer::with_context(\core\context\system::instance())->get_user_preferences('format_spiffy');
         $this->assertSame('list', $prefs->format_spiffy_viewmode->value);
+        $this->assertSame('{"12":1000}', $prefs->format_spiffy_recent_7->value);
     }
 
     /**

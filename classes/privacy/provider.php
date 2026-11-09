@@ -25,6 +25,7 @@ use core_privacy\local\request\contextlist;
 use core_privacy\local\request\transform;
 use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
+use format_spiffy\local\recent;
 
 /**
  * Privacy provider for format_spiffy.
@@ -66,6 +67,7 @@ class provider implements
         ], 'privacy:metadata:question');
         $collection->add_subsystem_link('core_message', [], 'privacy:metadata:core_message');
         $collection->add_user_preference('format_spiffy_viewmode', 'privacy:metadata:preference:viewmode');
+        $collection->add_user_preference('format_spiffy_recent', 'privacy:metadata:preference:recent');
         return $collection;
     }
 
@@ -162,6 +164,7 @@ class provider implements
 
     #[\Override]
     public static function export_user_preferences(int $userid): void {
+        global $DB;
         $viewmode = get_user_preferences('format_spiffy_viewmode', null, $userid);
         if ($viewmode !== null) {
             writer::export_user_preference(
@@ -169,6 +172,20 @@ class provider implements
                 'format_spiffy_viewmode',
                 $viewmode,
                 get_string('privacy:metadata:preference:viewmode', 'format_spiffy')
+            );
+        }
+        // One preference per course: format_spiffy_recent_<courseid>.
+        $recent = $DB->get_records_select(
+            'user_preferences',
+            'userid = :userid AND ' . $DB->sql_like('name', ':name'),
+            ['userid' => $userid, 'name' => $DB->sql_like_escape(recent::PREFERENCE) . '%']
+        );
+        foreach ($recent as $preference) {
+            writer::export_user_preference(
+                'format_spiffy',
+                $preference->name,
+                $preference->value,
+                get_string('privacy:metadata:preference:recent', 'format_spiffy')
             );
         }
     }

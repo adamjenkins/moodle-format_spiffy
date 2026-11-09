@@ -1,14 +1,12 @@
 # Changes
 
-## v0.1.0
+## v0.1.1
 
-First release: a course format of colourful activity cards for Moodle 5.3.
+### Added
 
-- **Spotlight view.** The current section is open with its current step large on the stage, the other steps beside it, and other sections shrunk to a bar with a progress ring. "Show me everything" switches to the full list.
-- **What's next.** Open work at the top of the page, due work first, with suggestions so students notice what is there.
-- **Clear order.** Numbered steps, and hint arrows from a locked step back to the step to do first.
-- **Activities on the card.** Page, URL (YouTube), File, Book, Choice, Forum, Quiz, Lesson, Feedback, Assignment, Glossary and Database.
-- **Tools on every card.** Private notes, Ask my teacher and a confidence check.
-- **Confetti** when a section is finished.
-- **For teachers.** What needs my attention, a panel on each card, quick actions, Preview as student, and Force and Remove sequential.
-- **Settings.** Layout options and ten on/off switches per course, with site defaults for all of them.
+- **Recently viewed.** Up to five small links, inside What's next for students and What needs my attention for teachers, to the activities you last looked at, newest first. A link brings that card back on stage and scrolls to it, so refreshing the page no longer loses your place. It counts cards you put on stage as well as activity pages you opened, and each person sees only their own. A new course switch turns it off (now eleven on/off switches). A course reset that clears completion or unenrols users clears the lists.
+
+### Fixed
+
+- **A course page with a YouTube video on screen could keep loading** for as long as YouTube took to answer. The video card now shows a play button and loads the player only when it is clicked, so nothing is fetched from YouTube until then.
+- **Uninstalling the format now removes its user preferences** (the view mode and Recently viewed), which Moodle leaves behind.

@@ -120,7 +120,8 @@ final class inline_url_test extends advanced_testcase {
     }
 
     /**
-     * The card embeds the video from youtube-nocookie.com with the activity name as its title.
+     * The card shows a play button for the youtube-nocookie.com video, and loads nothing from YouTube
+     * until it is clicked.
      *
      * @return void
      */
@@ -130,8 +131,11 @@ final class inline_url_test extends advanced_testcase {
         $video = $this->getDataGenerator()->create_module('url', ['course' => $course->id, 'name' => 'Welcome video',
             'externalurl' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ']);
         $html = $this->get_handler($course, $video->cmid)->render($PAGE->get_renderer('core'));
-        $this->assertStringContainsString('src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"', $html);
-        $this->assertStringContainsString('title="Welcome video"', $html);
+        $this->assertStringContainsString('data-spiffy-embed="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"', $html);
+        $this->assertStringContainsString('data-spiffy-title="Welcome video"', $html);
+        $this->assertStringContainsString(get_string('playvideoname', 'format_spiffy', 'Welcome video'), $html);
+        $this->assertStringNotContainsString('<iframe', $html);
+        $this->assertStringNotContainsString('src="https://www.youtube', $html);
     }
 
     /**

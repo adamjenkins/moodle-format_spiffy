@@ -39,6 +39,7 @@
         "spiffycardstyle": "soft",
         "spiffyarrows": "forwards",
         "spiffycelebrate": true,
+        "spiffyrecent": true,
         "sectionreturn": "null",
         "pagesectionid": "null",
         "spiffyhashes": "{}",
@@ -97,7 +98,7 @@
     }
 }}
 <div id="course-format-{{uniqid}}" class="format-spiffy spiffy-cardstyle-{{spiffycardstyle}} spiffy-view-{{#spiffyspotlight.islist}}list{{/spiffyspotlight.islist}}{{^spiffyspotlight.islist}}spotlight{{/spiffyspotlight.islist}}"
-    data-courseid="{{courseid}}" data-spiffy-sectionid="{{spiffysectionid}}" data-spiffy-hashes="{{spiffyhashes}}" data-spiffy-hint-label="{{#str}} completefirst, format_spiffy {{/str}}" data-spiffy-arrows="{{spiffyarrows}}"{{#spiffycelebrate}} data-spiffy-celebrate="1"{{/spiffycelebrate}}{{^spiffyspotlight.canswitch}} data-spiffy-fixedview="1"{{/spiffyspotlight.canswitch}}
+    data-courseid="{{courseid}}" data-spiffy-sectionid="{{spiffysectionid}}" data-spiffy-hashes="{{spiffyhashes}}" data-spiffy-hint-label="{{#str}} completefirst, format_spiffy {{/str}}" data-spiffy-arrows="{{spiffyarrows}}"{{#spiffycelebrate}} data-spiffy-celebrate="1"{{/spiffycelebrate}}{{#spiffyrecent}} data-spiffy-recent="1"{{/spiffyrecent}}{{^spiffyspotlight.canswitch}} data-spiffy-fixedview="1"{{/spiffyspotlight.canswitch}}
     data-spiffy-viewmode="{{#spiffyspotlight.islist}}list{{/spiffyspotlight.islist}}{{^spiffyspotlight.islist}}spotlight{{/spiffyspotlight.islist}}"
     data-spiffy-stage="{{spiffyspotlight.stage}}">
     <h2 class="visually-hidden">{{{title}}}</h2>

@@ -84,7 +84,7 @@ class format_spiffy extends core_courseformat\base {
      */
     public const FEATURES = [
         'spotlight', 'inline', 'markdone', 'notes', 'askteacher', 'confidence', 'celebrate', 'whatsnext', 'unlockhints',
-        'teachertools',
+        'teachertools', 'recent',
     ];
 
     /** @var int Longest word before the section number. */

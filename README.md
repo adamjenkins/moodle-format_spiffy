@@ -25,7 +25,7 @@ Page, URL (YouTube links play on the card), File (PDF preview), Book (when set p
 
 ## Settings
 
-**Course settings:** columns (1 to 4), card design, page width, hint arrows, course index, blocks drawer, General section always open, section label, and ten on/off switches: Spotlight view, Activities on the card, "Mark as done" on cards, My notes, Ask my teacher, Confidence check, Celebrate finished sections, What's next, Unlock hints and Teacher tools.
+**Course settings:** columns (1 to 4), card design, page width, hint arrows, course index, blocks drawer, General section always open, section label, and eleven on/off switches: Spotlight view, Activities on the card, "Mark as done" on cards, My notes, Ask my teacher, Confidence check, Celebrate finished sections, What's next, Unlock hints and Teacher tools, Recently viewed.
 
 **Per activity,** in the activity's settings under "Spiffy course format": button text, card width, accent colour, and on the card or on its own page.
 
@@ -33,7 +33,7 @@ Page, URL (YouTube links play on the card), File (PDF preview), Book (when set p
 
 ## Requirements
 
-Moodle 5.3. No other plugins, external services or accounts are needed. YouTube videos load from YouTube only when a course links to them.
+Moodle 5.3. No other plugins, external services or accounts are needed. YouTube videos load from YouTube only when someone clicks play on one.
 
 ## Installation
 

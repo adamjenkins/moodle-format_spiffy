@@ -37,6 +37,12 @@ $functions = [
         'type' => 'read',
         'ajax' => true,
     ],
+    'format_spiffy_card_viewed' => [
+        'classname' => \format_spiffy\external\card_viewed::class,
+        'description' => 'Remember that the current user put an activity card on stage, for "Recently viewed".',
+        'type' => 'write',
+        'ajax' => true,
+    ],
     'format_spiffy_save_note' => [
         'classname' => \format_spiffy\external\save_note::class,
         'description' => 'Save the current user\'s private note on an activity card.',

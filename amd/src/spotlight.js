@@ -50,6 +50,7 @@
  */
 
 import {getString} from 'core/str';
+import Ajax from 'core/ajax';
 import Pending from 'core/pending';
 import {setUserPreference} from 'core_user/repository';
 import {celebrate as throwConfetti} from 'format_spiffy/confetti';
@@ -411,6 +412,9 @@ class Spotlight {
     setFocus(ids, {push = true, auto = false, move = true} = {}) {
         const focus = this.limit(ids);
         const changed = focus.join(' ') !== this.focus.join(' ');
+        if (!auto) {
+            this.remember(this.auto ? focus : focus.filter((id) => !this.focus.includes(id)));
+        }
         this.focus = focus;
         this.auto = auto;
         if (push) {
@@ -424,6 +428,20 @@ class Spotlight {
             }
             return null;
         });
+    }
+
+    /**
+     * Save the cards the user just chose for "Recently viewed", straight away so that a refresh
+     * straight after still knows. Nothing depends on the answer.
+     *
+     * @param {string[]} ids course module ids
+     */
+    remember(ids) {
+        if (!ids.length || !this.root.dataset.spiffyRecent) {
+            return;
+        }
+        const calls = ids.map((cmid) => ({methodname: 'format_spiffy_card_viewed', args: {cmid: Number(cmid)}}));
+        Ajax.call(calls).forEach((call) => call.catch(() => null));
     }
 
     /**
@@ -723,6 +741,7 @@ class Spotlight {
     openFromList(cmid) {
         this.mode = MODES.SPOTLIGHT;
         this.focus = this.limit([cmid]);
+        this.remember(this.focus);
         this.auto = false;
         this.pushUrl(this.focus);
         this.savePreference();

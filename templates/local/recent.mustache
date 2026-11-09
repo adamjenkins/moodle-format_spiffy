@@ -1,0 +1,39 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_spiffy/local/recent
+
+    "Recently viewed": small links to what the user was just looking at. A link brings its card on
+    stage and scrolls to it (format_spiffy/spotlight). Context: format_spiffy\local\recent::export().
+
+    Example context (json):
+    {
+        "items": [
+            {"cmid": 3, "name": "Plan your observing…", "fullname": "Plan your observing night",
+                "url": "#card-3"},
+            {"cmid": 4, "name": "Sky words", "fullname": "Sky words", "url": "#card-4"}
+        ]
+    }
+}}
+<nav class="spiffy-recent" data-region="spiffy-recent" aria-label="{{#str}} recentlyviewed, format_spiffy {{/str}}">
+    <span class="spiffy-recent-label" aria-hidden="true">{{#str}} recentlyviewed, format_spiffy {{/str}}</span>
+    <ul class="spiffy-recent-list list-unstyled">
+        {{#items}}
+        <li><a href="{{url}}" class="spiffy-recent-link" data-spiffy-focus="{{cmid}}" title="{{fullname}}" aria-label="{{fullname}}">{{name}}</a></li>
+        {{/items}}
+    </ul>
+</nav>

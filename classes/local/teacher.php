@@ -273,6 +273,7 @@ class teacher {
             'morelabel' => get_string('teachermore', 'format_spiffy', $more),
             'hassummary' => !empty($summary),
             'summary' => $summary,
+            'recent' => recent::export($format),
             'preview' => self::preview_link($course, $courseurl),
         ];
     }

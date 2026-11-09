@@ -22,8 +22,9 @@ use renderer_base;
  * URL on a card: a YouTube link plays inside the card.
  *
  * Only links to a YouTube video are shown inside the card, embedded from youtube-nocookie.com with
- * a strictly checked video id; other links open as before. "Mark as viewed" records the view
- * through mod_url's own external function.
+ * a strictly checked video id; other links open as before. The card shows a play button and the
+ * player is loaded only when it is clicked (format_spiffy/inline). "Mark as viewed" records the
+ * view through mod_url's own external function.
  *
  * @package    format_spiffy
  * @copyright  2026 Adam Jenkins <adam@wisecat.net>

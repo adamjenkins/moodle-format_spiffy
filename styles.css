@@ -1403,6 +1403,64 @@
 .format-spiffy .spiffy-video iframe {
     border: 0;
 }
+/* The play button that stands in for the player until clicked. */
+.format-spiffy .spiffy-video-play {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--mds-spacing-xs, 0.25rem);
+    width: 100%;
+    padding: var(--mds-spacing-md, 1rem);
+    border: 0;
+    color: #fff;
+    background: #1d1f21;
+    text-align: center;
+    cursor: pointer;
+}
+.format-spiffy .spiffy-video-play-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: #c4302b;
+    transition: transform 0.15s ease;
+}
+.format-spiffy .spiffy-video-play-icon .icon {
+    margin: 0 0 0 0.2rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.5rem;
+    color: #fff;
+    filter: brightness(0) invert(1);
+}
+.format-spiffy .spiffy-video-play:hover .spiffy-video-play-icon,
+.format-spiffy .spiffy-video-play:focus-visible .spiffy-video-play-icon {
+    transform: scale(1.08);
+}
+.format-spiffy .spiffy-video-play:focus-visible {
+    outline: 3px solid var(--bs-focus-ring-color, #0f6cbf);
+    outline-offset: -3px;
+}
+.format-spiffy .spiffy-video-play-text {
+    font-weight: 600;
+}
+.format-spiffy .spiffy-video-play-name {
+    max-width: 90%;
+    overflow: hidden;
+    font-size: 0.875rem;
+    opacity: 0.85;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .format-spiffy .spiffy-video-play-icon {
+        transition: none;
+    }
+}
 
 @media (max-width: 575.98px) {
     .format-spiffy .spiffy-resource-pdf object {
@@ -2131,4 +2189,47 @@ body.spiffy-widened.pagelayout-course .secondary-navigation .secondarynav-tabbar
     margin: 0 var(--mds-spacing-xxs, 0.25rem) 0 0;
     font-size: 0.875rem;
     line-height: 1;
+}
+
+/* "Recently viewed": small links inside What's next and What needs my attention. */
+.format-spiffy .spiffy-recent {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mds-spacing-xs, 0.5rem);
+    margin-top: var(--mds-spacing-sm, 0.75rem);
+    font-size: 0.8125rem;
+}
+
+.format-spiffy .spiffy-toolbar > .spiffy-recent {
+    flex: 1 1 16rem;
+    align-self: center;
+    margin-top: 0;
+}
+
+.format-spiffy .spiffy-recent-label {
+    color: var(--mds-text-body-secondary, var(--bs-secondary-color));
+    font-weight: var(--mds-font-weight-bold, 700);
+}
+
+.format-spiffy .spiffy-recent-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mds-spacing-xs, 0.5rem);
+    margin: 0;
+}
+
+.format-spiffy .spiffy-recent-link {
+    display: inline-block;
+    padding: 0.0625rem 0.625rem;
+    border: 1px solid var(--spiffy-island-border);
+    border-radius: 999px;
+    background-color: var(--spiffy-surface);
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.format-spiffy .spiffy-recent-link:hover,
+.format-spiffy .spiffy-recent-link:focus-visible {
+    text-decoration: underline;
 }

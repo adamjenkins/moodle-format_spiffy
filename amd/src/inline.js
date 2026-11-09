@@ -270,6 +270,30 @@ export const refresh = async(root, skipBusy = true) => {
 };
 
 /**
+ * Swap a video's play button for the YouTube player, playing.
+ *
+ * The player is only loaded on a click: an iframe on the page holds up its load event until
+ * YouTube answers, so a slow YouTube kept the course page loading.
+ *
+ * @param {HTMLElement} button the play button, with data-spiffy-embed and data-spiffy-title
+ */
+const playVideo = (button) => {
+    const frame = document.createElement('iframe');
+    const url = new URL(button.dataset.spiffyEmbed);
+    url.searchParams.set('autoplay', '1');
+    frame.src = url.toString();
+    frame.title = button.dataset.spiffyTitle;
+    frame.allow = 'accelerometer; autoplay; encrypted-media; picture-in-picture';
+    frame.referrerPolicy = 'strict-origin-when-cross-origin';
+    frame.allowFullscreen = true;
+    const box = button.parentElement;
+    // A refresh would replace the section and stop the video.
+    box.dataset.spiffyBusy = '1';
+    button.replaceWith(frame);
+    frame.focus();
+};
+
+/**
  * Set up inline actions and live refresh for a Spiffy course page.
  *
  * @param {string} rootselector selector of the format's content root
@@ -298,6 +322,13 @@ export const init = (rootselector) => {
         event.preventDefault();
         const data = button.dataset.spiffyValue !== undefined ? {value: button.dataset.spiffyValue} : {};
         sendAction(root, button, data);
+    });
+
+    root.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-spiffy-embed]');
+        if (button && root.contains(button)) {
+            playVideo(button);
+        }
     });
 
     // Core's "Mark as done" button only redraws itself: bring the card, its section and the next step up to date.

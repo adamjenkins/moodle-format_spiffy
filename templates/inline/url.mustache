@@ -17,7 +17,9 @@
 {{!
     @template format_spiffy/inline/url
 
-    A YouTube video played inside its card, from youtube-nocookie.com, in a 16:9 frame.
+    A YouTube video played inside its card, from youtube-nocookie.com, in a 16:9 frame. The card shows
+    a play button, and the player is only loaded when it is clicked (format_spiffy/inline), so a slow
+    YouTube never holds up the course page and nothing is fetched from YouTube until then.
 
     Example context (json):
     {
@@ -31,7 +33,12 @@
 }}
 <div class="spiffy-inline spiffy-url{{#done}} spiffy-done-view{{/done}}">
     <div class="spiffy-video ratio ratio-16x9">
-        <iframe src="{{embedurl}}" title="{{name}}" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <button type="button" class="spiffy-video-play" data-spiffy-embed="{{embedurl}}" data-spiffy-title="{{name}}"
+            aria-label="{{#str}} playvideoname, format_spiffy, {{name}} {{/str}}">
+            <span class="spiffy-video-play-icon" aria-hidden="true">{{#pix}} t/play, core {{/pix}}</span>
+            <span class="spiffy-video-play-text">{{#str}} playvideo, format_spiffy {{/str}}</span>
+            <span class="spiffy-video-play-name">{{name}}</span>
+        </button>
     </div>
     {{> format_spiffy/inline/page_markread }}
 </div>

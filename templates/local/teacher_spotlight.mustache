@@ -68,6 +68,7 @@
                 {{^hasitems}}
                     <p class="spiffy-note spiffy-teacher-allclear">{{#str}} teacherallclear, format_spiffy {{/str}}</p>
                 {{/hasitems}}
+                {{#recent}}{{> format_spiffy/local/recent }}{{/recent}}
                 {{#preview}}
                     <p class="spiffy-teacher-preview">
                         <a href="{{url}}" class="btn mds-btn mds-btn--size-sm btn-outline-secondary">

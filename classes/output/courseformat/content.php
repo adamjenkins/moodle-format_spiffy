@@ -109,6 +109,7 @@ class content extends content_base {
         $data->spiffycardstyle = $format->get_display_option('cardstyle');
         $data->spiffyarrows = $format->get_display_option('arrows');
         $data->spiffycelebrate = $format->feature_enabled('celebrate');
+        $data->spiffyrecent = $format->feature_enabled('recent');
         $data->spiffyspotlight = spotlight::export_page($format, $data, $output);
         $data->spiffyteacher = teacher::export_page($format, $data, $output);
 
